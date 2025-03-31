@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import RestaurantCard from '@/components/RestaurantCard';
+
 const featuredRestaurants = [{
   id: 1,
   name: "Пушкин",
@@ -33,6 +34,7 @@ const featuredRestaurants = [{
   address: "Москва, ул. Моховая, 15/1",
   openHours: "12:00 - 00:00"
 }];
+
 const popularCuisines = [{
   name: "Русская",
   icon: "🥟"
@@ -52,6 +54,7 @@ const popularCuisines = [{
   name: "Французская",
   icon: "🥐"
 }];
+
 const Home = () => {
   return <div>
       {/* Hero Section */}
@@ -67,12 +70,12 @@ const Home = () => {
           </p>
 
           <div className="max-w-md mx-auto">
-            <div className="flex">
+            <div className="flex items-stretch">
               <div className="relative flex-grow">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                <Input type="text" placeholder="Поиск ресторана или кухни" className="pl-10 pr-4 py-6 rounded-l-lg bg-background/80 backdrop-blur-sm border-r-0" />
+                <Input type="text" placeholder="Поиск ресторана или кухни" className="pl-10 pr-4 h-12 rounded-l-lg bg-background/80 backdrop-blur-sm border-r-0" />
               </div>
-              <Button className="rounded-l-none px-6 text-base">Найти</Button>
+              <Button className="rounded-l-none px-6 text-base h-12">Найти</Button>
             </div>
           </div>
         </div>

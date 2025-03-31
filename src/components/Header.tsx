@@ -38,11 +38,11 @@ const Header = () => {
           </div>
           
           <nav className="flex items-center gap-2 md:gap-4">
-            <Button variant="link" asChild>
-              <Link to="/restaurants" className="text-foreground">Рестораны</Link>
+            <Button variant="ghost" asChild className="text-white hover:bg-primary hover:text-white transition-colors">
+              <Link to="/restaurants">Рестораны</Link>
             </Button>
-            <Button variant="link" asChild>
-              <Link to="/about" className="text-foreground">О сервисе</Link>
+            <Button variant="ghost" asChild className="text-white hover:bg-primary hover:text-white transition-colors">
+              <Link to="/about">О сервисе</Link>
             </Button>
             <Button variant="outline" size="sm" asChild>
               <Link to="/login" className="flex items-center gap-2">
