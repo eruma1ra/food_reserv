@@ -55,8 +55,16 @@ const RestaurantFilters = ({ initialFilters, onApplyFilters }: RestaurantFilters
     setFilters(prev => ({ ...prev, location: value }));
   };
 
-  const handlePriceRangeChange = (value: [number, number]) => {
-    setFilters(prev => ({ ...prev, priceRange: value }));
+  const handlePriceRangeChange = (value: number[]) => {
+    // Ensure we always have exactly two values for the price range
+    let priceRange: [number, number] = [1, 4];
+    if (value.length >= 2) {
+      priceRange = [value[0], value[1]];
+    } else if (value.length === 1) {
+      priceRange = [value[0], 4];
+    }
+    
+    setFilters(prev => ({ ...prev, priceRange }));
   };
 
   const handleSortChange = (value: string) => {
@@ -68,7 +76,7 @@ const RestaurantFilters = ({ initialFilters, onApplyFilters }: RestaurantFilters
   };
 
   const handleResetFilters = () => {
-    const resetFilters = {
+    const resetFilters: FilterOptions = {
       search: '',
       location: '',
       cuisines: [],

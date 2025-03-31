@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Search, ChevronRight, Star, Award, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -56,6 +56,18 @@ const popularCuisines = [{
 }];
 
 const Home = () => {
+  const navigate = useNavigate();
+  
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const searchQuery = formData.get('homeSearch') as string;
+    
+    if (searchQuery?.trim()) {
+      navigate(`/restaurants?search=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
   return <div>
       {/* Hero Section */}
       <section className="relative bg-cover bg-center py-36 text-white" style={{
@@ -70,13 +82,18 @@ const Home = () => {
           </p>
 
           <div className="max-w-md mx-auto">
-            <div className="flex items-stretch">
+            <form onSubmit={handleSearch} className="flex items-stretch">
               <div className="relative flex-grow">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                <Input type="text" placeholder="Поиск ресторана или кухни" className="pl-10 pr-4 h-12 rounded-l-lg bg-background/80 backdrop-blur-sm border-r-0" />
+                <Input 
+                  type="text" 
+                  name="homeSearch"
+                  placeholder="Поиск ресторана или кухни" 
+                  className="pl-10 pr-4 h-12 rounded-l-lg bg-background/80 backdrop-blur-sm border-r-0" 
+                />
               </div>
-              <Button className="rounded-l-none px-6 text-base h-12">Найти</Button>
-            </div>
+              <Button type="submit" className="rounded-l-none px-6 text-base h-12">Найти</Button>
+            </form>
           </div>
         </div>
       </section>
@@ -86,17 +103,23 @@ const Home = () => {
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-2xl md:text-3xl font-heading font-bold">Популярные кухни</h2>
           <Button variant="link" asChild className="text-primary">
-            <Link to="/cuisines" className="flex items-center">
+            <Link to="/restaurants" className="flex items-center">
               Все кухни <ChevronRight className="h-4 w-4 ml-1" />
             </Link>
           </Button>
         </div>
 
         <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-6 gap-4">
-          {popularCuisines.map((cuisine, index) => <Link to={`/restaurants?cuisine=${cuisine.name}`} key={index} className="bg-card hover:bg-card/80 rounded-lg p-4 text-center transition-all border border-border card-hover">
+          {popularCuisines.map((cuisine, index) => (
+            <Link 
+              to={`/restaurants?cuisine=${encodeURIComponent(cuisine.name)}`} 
+              key={index} 
+              className="bg-card hover:bg-card/80 rounded-lg p-4 text-center transition-all border border-border card-hover"
+            >
               <span className="text-4xl block mb-2">{cuisine.icon}</span>
               <span className="font-medium">{cuisine.name}</span>
-            </Link>)}
+            </Link>
+          ))}
         </div>
       </section>
 
@@ -186,4 +209,5 @@ const Home = () => {
       </section>
     </div>;
 };
+
 export default Home;

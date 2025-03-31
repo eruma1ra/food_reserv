@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import RestaurantCard from '@/components/RestaurantCard';
 import RestaurantFilters from '@/components/RestaurantFilters';
 import { useToast } from '@/components/ui/use-toast';
+import { useLocation } from 'react-router-dom';
 
 export type Restaurant = {
   id: number;
@@ -90,14 +91,22 @@ export type FilterOptions = {
 
 const RestaurantsPage = () => {
   const { toast } = useToast();
+  const location = useLocation();
   const [restaurants] = useState<Restaurant[]>(initialRestaurants);
+  
+  // Parse query params to initialize filters
+  const searchParams = new URLSearchParams(location.search);
+  const searchQuery = searchParams.get('search') || '';
+  const cuisineParam = searchParams.get('cuisine') || '';
+  
   const [filterOptions, setFilterOptions] = useState<FilterOptions>({
-    search: '',
+    search: searchQuery,
     location: '',
-    cuisines: [],
+    cuisines: cuisineParam ? [cuisineParam] : [],
     priceRange: [1, 4],
     sortBy: 'rating'
   });
+  
   const [visibleCount, setVisibleCount] = useState(4);
 
   // Apply filters to the restaurants
@@ -112,13 +121,23 @@ const RestaurantsPage = () => {
       );
     }
     
-    // Filter by location
+    // Filter by location - improved
     if (filterOptions.location && filterOptions.location !== 'all') {
-      // For demo purposes, we assume all restaurants are in Moscow
-      // In a real app, we would filter by location
-      result = result.filter(restaurant => 
-        restaurant.address.includes('Москва')
-      );
+      // Map location values to actual city names in addresses
+      const locationMappings = {
+        'moscow': 'Москва',
+        'spb': 'Санкт-Петербург',
+        'kazan': 'Казань',
+        'sochi': 'Сочи',
+        'novosibirsk': 'Новосибирск'
+      };
+      
+      const cityName = locationMappings[filterOptions.location as keyof typeof locationMappings];
+      if (cityName) {
+        result = result.filter(restaurant => 
+          restaurant.address.includes(cityName)
+        );
+      }
     }
     
     // Filter by cuisine
