@@ -15,7 +15,14 @@ import AdminPanel from "./pages/AdminPanel";
 import NotFound from "./pages/NotFound";
 import AboutPage from "./pages/AboutPage";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      staleTime: 5 * 60 * 1000, // 5 minutes
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -33,6 +40,7 @@ const App = () => (
             <Route path="/profile" element={<UserProfile />} />
             <Route path="/admin" element={<AdminPanel />} />
             <Route path="/about" element={<AboutPage />} />
+            <Route path="/partners" element={<AboutPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>

@@ -1,10 +1,23 @@
 
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import RestaurantCard from '@/components/RestaurantCard';
 import RestaurantFilters from '@/components/RestaurantFilters';
+import { useToast } from '@/components/ui/use-toast';
 
-const restaurants = [
+export type Restaurant = {
+  id: number;
+  name: string;
+  cuisine: string;
+  rating: number;
+  priceLevel: string;
+  image: string;
+  address: string;
+  openHours: string;
+};
+
+// Sample restaurant data
+const initialRestaurants = [
   {
     id: 1,
     name: "Пушкин",
@@ -67,7 +80,100 @@ const restaurants = [
   }
 ];
 
+export type FilterOptions = {
+  search: string;
+  location: string;
+  cuisines: string[];
+  priceRange: [number, number];
+  sortBy: string;
+};
+
 const RestaurantsPage = () => {
+  const { toast } = useToast();
+  const [restaurants] = useState<Restaurant[]>(initialRestaurants);
+  const [filterOptions, setFilterOptions] = useState<FilterOptions>({
+    search: '',
+    location: '',
+    cuisines: [],
+    priceRange: [1, 4],
+    sortBy: 'rating'
+  });
+  const [visibleCount, setVisibleCount] = useState(4);
+
+  // Apply filters to the restaurants
+  const filteredRestaurants = useMemo(() => {
+    let result = [...restaurants];
+    
+    // Filter by search term
+    if (filterOptions.search) {
+      const searchLower = filterOptions.search.toLowerCase();
+      result = result.filter(restaurant => 
+        restaurant.name.toLowerCase().includes(searchLower)
+      );
+    }
+    
+    // Filter by location
+    if (filterOptions.location && filterOptions.location !== 'all') {
+      // For demo purposes, we assume all restaurants are in Moscow
+      // In a real app, we would filter by location
+      result = result.filter(restaurant => 
+        restaurant.address.includes('Москва')
+      );
+    }
+    
+    // Filter by cuisine
+    if (filterOptions.cuisines.length > 0) {
+      result = result.filter(restaurant => {
+        // Check if any of the selected cuisines match the restaurant's cuisine
+        return filterOptions.cuisines.some(cuisine => 
+          restaurant.cuisine.includes(cuisine)
+        );
+      });
+    }
+    
+    // Filter by price range
+    const [minPrice, maxPrice] = filterOptions.priceRange;
+    result = result.filter(restaurant => {
+      const priceCount = restaurant.priceLevel.length;
+      return priceCount >= minPrice && priceCount <= maxPrice;
+    });
+    
+    // Sort results
+    switch (filterOptions.sortBy) {
+      case 'rating':
+        result.sort((a, b) => b.rating - a.rating);
+        break;
+      case 'price_asc':
+        result.sort((a, b) => a.priceLevel.length - b.priceLevel.length);
+        break;
+      case 'price_desc':
+        result.sort((a, b) => b.priceLevel.length - a.priceLevel.length);
+        break;
+      case 'popularity':
+        // For demo purposes, we sort by id as a proxy for popularity
+        result.sort((a, b) => a.id - b.id);
+        break;
+      default:
+        break;
+    }
+    
+    return result;
+  }, [restaurants, filterOptions]);
+
+  const handleApplyFilters = (newFilters: FilterOptions) => {
+    setFilterOptions(newFilters);
+    toast({
+      title: "Фильтры применены",
+      description: "Список ресторанов обновлен",
+    });
+  };
+
+  const handleShowMore = () => {
+    setVisibleCount(prev => Math.min(prev + 4, filteredRestaurants.length));
+  };
+
+  const displayedRestaurants = filteredRestaurants.slice(0, visibleCount);
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
@@ -77,19 +183,31 @@ const RestaurantsPage = () => {
       
       <div className="flex flex-col md:flex-row gap-8">
         <div className="md:w-1/4">
-          <RestaurantFilters />
+          <RestaurantFilters 
+            initialFilters={filterOptions}
+            onApplyFilters={handleApplyFilters}
+          />
         </div>
         
         <div className="md:w-3/4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {restaurants.map(restaurant => (
-              <RestaurantCard key={restaurant.id} {...restaurant} />
-            ))}
-          </div>
+          {displayedRestaurants.length === 0 ? (
+            <div className="text-center py-12">
+              <h3 className="text-xl font-medium mb-2">Рестораны не найдены</h3>
+              <p className="text-muted-foreground">Попробуйте изменить параметры фильтров</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {displayedRestaurants.map(restaurant => (
+                <RestaurantCard key={restaurant.id} {...restaurant} />
+              ))}
+            </div>
+          )}
           
-          <div className="mt-8 flex justify-center">
-            <Button variant="outline">Показать ещё</Button>
-          </div>
+          {visibleCount < filteredRestaurants.length && (
+            <div className="mt-8 flex justify-center">
+              <Button variant="outline" onClick={handleShowMore}>Показать ещё</Button>
+            </div>
+          )}
         </div>
       </div>
     </div>

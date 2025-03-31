@@ -1,6 +1,6 @@
 
-import React from 'react';
-import { Search, Filter } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Search, Filter, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { 
   Select, 
@@ -17,27 +17,84 @@ import {
 } from '@/components/ui/popover';
 import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
+import { FilterOptions } from '@/pages/RestaurantsPage';
 
-const RestaurantFilters = () => {
-  const [priceRange, setPriceRange] = React.useState([1, 4]);
-  const [activeFilters, setActiveFilters] = React.useState<string[]>([]);
+interface RestaurantFiltersProps {
+  initialFilters: FilterOptions;
+  onApplyFilters: (filters: FilterOptions) => void;
+}
+
+const RestaurantFilters = ({ initialFilters, onApplyFilters }: RestaurantFiltersProps) => {
+  const [filters, setFilters] = useState<FilterOptions>(initialFilters);
+  
+  // Update local filters when initialFilters changes
+  useEffect(() => {
+    setFilters(initialFilters);
+  }, [initialFilters]);
 
   const cuisines = [
     'Русская', 'Итальянская', 'Японская', 'Китайская', 'Французская',
-    'Грузинская', 'Мексиканская', 'Индийская', 'Средиземноморская'
+    'Грузинская', 'Мексиканская', 'Индийская', 'Средиземноморская', 'Морепродукты', 
+    'Европейская', 'Скандинавская', 'Современная русская', 'Пиццерия'
   ];
 
   const handleCuisineToggle = (cuisine: string) => {
-    setActiveFilters(prev => 
-      prev.includes(cuisine) 
-        ? prev.filter(c => c !== cuisine) 
-        : [...prev, cuisine]
-    );
+    setFilters(prev => ({
+      ...prev,
+      cuisines: prev.cuisines.includes(cuisine) 
+        ? prev.cuisines.filter(c => c !== cuisine) 
+        : [...prev.cuisines, cuisine]
+    }));
+  };
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFilters(prev => ({ ...prev, search: e.target.value }));
+  };
+
+  const handleLocationChange = (value: string) => {
+    setFilters(prev => ({ ...prev, location: value }));
+  };
+
+  const handlePriceRangeChange = (value: [number, number]) => {
+    setFilters(prev => ({ ...prev, priceRange: value }));
+  };
+
+  const handleSortChange = (value: string) => {
+    setFilters(prev => ({ ...prev, sortBy: value }));
+  };
+
+  const handleApplyFilters = () => {
+    onApplyFilters(filters);
+  };
+
+  const handleResetFilters = () => {
+    const resetFilters = {
+      search: '',
+      location: '',
+      cuisines: [],
+      priceRange: [1, 4],
+      sortBy: 'rating'
+    };
+    setFilters(resetFilters);
+    onApplyFilters(resetFilters);
   };
 
   return (
     <div className="bg-card rounded-lg p-4 border border-border">
-      <h2 className="font-heading text-lg font-bold mb-4">Фильтры</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="font-heading text-lg font-bold">Фильтры</h2>
+        {(filters.search || filters.location || filters.cuisines.length > 0 || 
+          filters.priceRange[0] !== 1 || filters.priceRange[1] !== 4) && (
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={handleResetFilters} 
+            className="text-xs flex items-center gap-1"
+          >
+            <X className="h-3 w-3" /> Сбросить
+          </Button>
+        )}
+      </div>
       
       <div className="space-y-4">
         <div className="relative">
@@ -45,16 +102,22 @@ const RestaurantFilters = () => {
           <Input 
             placeholder="Поиск по названию" 
             className="pl-10" 
+            value={filters.search}
+            onChange={handleSearch}
           />
         </div>
         
         <div>
           <label className="block text-sm font-medium mb-2">Местоположение</label>
-          <Select>
+          <Select 
+            value={filters.location} 
+            onValueChange={handleLocationChange}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Выберите город" />
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value="all">Все города</SelectItem>
               <SelectItem value="moscow">Москва</SelectItem>
               <SelectItem value="spb">Санкт-Петербург</SelectItem>
               <SelectItem value="kazan">Казань</SelectItem>
@@ -69,7 +132,7 @@ const RestaurantFilters = () => {
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="outline" className="w-full justify-between">
-                <span>Выбрать кухню</span>
+                <span>{filters.cuisines.length > 0 ? `Выбрано: ${filters.cuisines.length}` : 'Выбрать кухню'}</span>
                 <Filter className="h-4 w-4 opacity-50" />
               </Button>
             </PopoverTrigger>
@@ -81,7 +144,7 @@ const RestaurantFilters = () => {
                       key={cuisine}
                       className={`
                         px-3 py-2 rounded-md text-sm cursor-pointer transition-colors
-                        ${activeFilters.includes(cuisine) 
+                        ${filters.cuisines.includes(cuisine) 
                           ? 'bg-primary/20 text-primary' 
                           : 'hover:bg-muted'}
                       `}
@@ -95,14 +158,14 @@ const RestaurantFilters = () => {
             </PopoverContent>
           </Popover>
           
-          {activeFilters.length > 0 && (
+          {filters.cuisines.length > 0 && (
             <div className="flex flex-wrap gap-2 mt-2">
-              {activeFilters.map(filter => (
-                <Badge key={filter} variant="secondary" className="bg-primary/10 text-primary">
-                  {filter}
+              {filters.cuisines.map(cuisine => (
+                <Badge key={cuisine} variant="secondary" className="bg-primary/10 text-primary">
+                  {cuisine}
                   <button
                     className="ml-1 hover:text-destructive"
-                    onClick={() => handleCuisineToggle(filter)}
+                    onClick={() => handleCuisineToggle(cuisine)}
                   >
                     ×
                   </button>
@@ -116,12 +179,11 @@ const RestaurantFilters = () => {
           <label className="block text-sm font-medium mb-2">Ценовая категория</label>
           <div className="px-2">
             <Slider
-              defaultValue={[1, 4]}
               max={4}
               min={1}
               step={1}
-              value={priceRange}
-              onValueChange={setPriceRange}
+              value={filters.priceRange}
+              onValueChange={(value) => handlePriceRangeChange(value as [number, number])}
               className="my-4"
             />
             <div className="flex justify-between text-xs text-muted-foreground">
@@ -135,7 +197,10 @@ const RestaurantFilters = () => {
         
         <div>
           <label className="block text-sm font-medium mb-2">Сортировать по</label>
-          <Select>
+          <Select 
+            value={filters.sortBy} 
+            onValueChange={handleSortChange}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Выберите сортировку" />
             </SelectTrigger>
@@ -148,7 +213,7 @@ const RestaurantFilters = () => {
           </Select>
         </div>
         
-        <Button className="w-full">Применить фильтры</Button>
+        <Button className="w-full" onClick={handleApplyFilters}>Применить фильтры</Button>
       </div>
     </div>
   );
