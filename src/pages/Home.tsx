@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Search, ChevronRight, Star, Award, Calendar } from 'lucide-react';
@@ -6,59 +5,59 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import RestaurantCard from '@/components/RestaurantCard';
-
-const featuredRestaurants = [
-  {
-    id: 1,
-    name: "Пушкин",
-    cuisine: "Русская",
-    rating: 4.8,
-    priceLevel: "₽₽₽",
-    image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-    address: "Москва, Тверской бульвар, 26А",
-    openHours: "12:00 - 00:00"
-  },
-  {
-    id: 2,
-    name: "Сахалин",
-    cuisine: "Морепродукты",
-    rating: 4.7,
-    priceLevel: "₽₽₽₽",
-    image: "https://images.unsplash.com/photo-1544148103-0773bf10d330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-    address: "Москва, Смоленская площадь, 3",
-    openHours: "12:00 - 00:00"
-  },
-  {
-    id: 3,
-    name: "Белуга",
-    cuisine: "Русская, Европейская",
-    rating: 4.9,
-    priceLevel: "₽₽₽₽",
-    image: "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-    address: "Москва, ул. Моховая, 15/1",
-    openHours: "12:00 - 00:00"
-  },
-];
-
-const popularCuisines = [
-  { name: "Русская", icon: "🥟" },
-  { name: "Итальянская", icon: "🍝" },
-  { name: "Японская", icon: "🍣" },
-  { name: "Грузинская", icon: "🥘" },
-  { name: "Мексиканская", icon: "🌮" },
-  { name: "Французская", icon: "🥐" }
-];
-
+const featuredRestaurants = [{
+  id: 1,
+  name: "Пушкин",
+  cuisine: "Русская",
+  rating: 4.8,
+  priceLevel: "₽₽₽",
+  image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+  address: "Москва, Тверской бульвар, 26А",
+  openHours: "12:00 - 00:00"
+}, {
+  id: 2,
+  name: "Сахалин",
+  cuisine: "Морепродукты",
+  rating: 4.7,
+  priceLevel: "₽₽₽₽",
+  image: "https://images.unsplash.com/photo-1544148103-0773bf10d330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+  address: "Москва, Смоленская площадь, 3",
+  openHours: "12:00 - 00:00"
+}, {
+  id: 3,
+  name: "Белуга",
+  cuisine: "Русская, Европейская",
+  rating: 4.9,
+  priceLevel: "₽₽₽₽",
+  image: "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+  address: "Москва, ул. Моховая, 15/1",
+  openHours: "12:00 - 00:00"
+}];
+const popularCuisines = [{
+  name: "Русская",
+  icon: "🥟"
+}, {
+  name: "Итальянская",
+  icon: "🍝"
+}, {
+  name: "Японская",
+  icon: "🍣"
+}, {
+  name: "Грузинская",
+  icon: "🥘"
+}, {
+  name: "Мексиканская",
+  icon: "🌮"
+}, {
+  name: "Французская",
+  icon: "🥐"
+}];
 const Home = () => {
-  return (
-    <div>
+  return <div>
       {/* Hero Section */}
-      <section
-        className="relative bg-cover bg-center py-36 text-white"
-        style={{
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1514933651103-005eec06c04b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80')`,
-        }}
-      >
+      <section className="relative bg-cover bg-center py-36 text-white" style={{
+      backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1514933651103-005eec06c04b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80')`
+    }}>
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6">
             Бронирование столиков в лучших ресторанах
@@ -71,11 +70,7 @@ const Home = () => {
             <div className="flex">
               <div className="relative flex-grow">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                <Input
-                  type="text"
-                  placeholder="Поиск ресторана или кухни"
-                  className="pl-10 pr-4 py-6 rounded-l-lg bg-background/80 backdrop-blur-sm border-r-0"
-                />
+                <Input type="text" placeholder="Поиск ресторана или кухни" className="pl-10 pr-4 py-6 rounded-l-lg bg-background/80 backdrop-blur-sm border-r-0" />
               </div>
               <Button className="rounded-l-none px-6 text-base">Найти</Button>
             </div>
@@ -95,16 +90,10 @@ const Home = () => {
         </div>
 
         <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-6 gap-4">
-          {popularCuisines.map((cuisine, index) => (
-            <Link
-              to={`/restaurants?cuisine=${cuisine.name}`}
-              key={index}
-              className="bg-card hover:bg-card/80 rounded-lg p-4 text-center transition-all border border-border card-hover"
-            >
+          {popularCuisines.map((cuisine, index) => <Link to={`/restaurants?cuisine=${cuisine.name}`} key={index} className="bg-card hover:bg-card/80 rounded-lg p-4 text-center transition-all border border-border card-hover">
               <span className="text-4xl block mb-2">{cuisine.icon}</span>
               <span className="font-medium">{cuisine.name}</span>
-            </Link>
-          ))}
+            </Link>)}
         </div>
       </section>
 
@@ -121,9 +110,7 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredRestaurants.map((restaurant) => (
-              <RestaurantCard key={restaurant.id} {...restaurant} />
-            ))}
+            {featuredRestaurants.map(restaurant => <RestaurantCard key={restaurant.id} {...restaurant} />)}
           </div>
         </div>
       </section>
@@ -172,7 +159,7 @@ const Home = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-primary/10">
+      <section className="py-16 bg-inherit">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-2xl md:text-3xl font-heading font-bold mb-4">
             Готовы попробовать?
@@ -194,8 +181,6 @@ const Home = () => {
           </div>
         </div>
       </section>
-    </div>
-  );
+    </div>;
 };
-
 export default Home;

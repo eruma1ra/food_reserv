@@ -1,10 +1,7 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
-
 const Footer = () => {
-  return (
-    <footer className="bg-secondary py-10 mt-16">
+  return <footer className="py-10 mt-16 bg-[#0f0f0f]/[0.31]">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
@@ -53,8 +50,6 @@ const Footer = () => {
           <p>&copy; {new Date().getFullYear()} ТолькоРесторан. Все права защищены.</p>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;
