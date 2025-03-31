@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { MapPin, Phone, Mail, Clock, Users, Award, Shield, Heart } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Users, Award, Shield, Heart, ChevronRight } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 
 const AboutPage = () => {
