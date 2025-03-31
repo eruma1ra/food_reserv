@@ -38,12 +38,12 @@ const Header = () => {
           </div>
           
           <nav className="flex items-center gap-2 md:gap-4">
-            <Button variant="ghost" asChild className="text-white hover:bg-primary hover:text-white transition-colors">
-              <Link to="/restaurants">Рестораны</Link>
-            </Button>
-            <Button variant="ghost" asChild className="text-white hover:bg-primary hover:text-white transition-colors">
-              <Link to="/about">О сервисе</Link>
-            </Button>
+            <Link to="/restaurants" className="text-white hover:text-primary hover:underline hover:decoration-primary hover:decoration-2 px-4 py-2 transition-colors">
+              Рестораны
+            </Link>
+            <Link to="/about" className="text-white hover:text-primary hover:underline hover:decoration-primary hover:decoration-2 px-4 py-2 transition-colors">
+              О сервисе
+            </Link>
             <Button variant="outline" size="sm" asChild>
               <Link to="/login" className="flex items-center gap-2">
                 <LogIn className="h-4 w-4" />
