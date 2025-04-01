@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { 
@@ -9,7 +8,8 @@ import {
   Clock, 
   ChevronRight,
   ChevronLeft,
-  Utensils
+  Utensils,
+  Calendar
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -477,7 +477,7 @@ const RestaurantDetails = () => {
                             onSelect={setDate}
                             locale={ru}
                             initialFocus
-                            className="p-4"
+                            className="p-4 pointer-events-auto"
                           />
                         </DialogContent>
                       </Dialog>
