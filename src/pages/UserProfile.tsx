@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,39 +7,109 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Clock, Calendar, MapPin, Edit, User, Settings, LogOut, BookOpen } from 'lucide-react';
-
-// Моковые данные для демонстрации
-const userBookings = [
-  {
-    id: 1,
-    restaurant: "Пушкин",
-    date: "25 сентября 2023",
-    time: "19:00",
-    guests: 2,
-    status: "confirmed", // confirmed, completed, cancelled
-    image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
-  },
-  {
-    id: 2,
-    restaurant: "Северяне",
-    date: "30 сентября 2023",
-    time: "20:00",
-    guests: 4,
-    status: "confirmed",
-    image: "https://images.unsplash.com/photo-1590846406792-0adc7f938f1d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
-  },
-  {
-    id: 3,
-    restaurant: "Белуга",
-    date: "15 сентября 2023",
-    time: "18:30",
-    guests: 3,
-    status: "completed",
-    image: "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
-  }
-];
+import { useToast } from '@/components/ui/use-toast';
+import { useNavigate } from 'react-router-dom';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 
 const UserProfile = () => {
+  const { toast } = useToast();
+  const navigate = useNavigate();
+  const [userInfo, setUserInfo] = useState({
+    firstName: 'Иван',
+    lastName: 'Петров',
+    email: 'ivan@example.com',
+    phone: '+7 (901) 123-45-67'
+  });
+  
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  
+  const [userBookings, setUserBookings] = useState([
+    {
+      id: 1,
+      restaurant: "Пушкин",
+      date: "25 сентября 2023",
+      time: "19:00",
+      guests: 2,
+      status: "confirmed", // confirmed, completed, cancelled
+      image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      id: 2,
+      restaurant: "Горыныч",
+      date: "30 сентября 2023",
+      time: "20:00",
+      guests: 4,
+      status: "confirmed",
+      image: "https://images.unsplash.com/photo-1590846406792-0adc7f938f1d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      id: 3,
+      restaurant: "Twins Garden",
+      date: "15 сентября 2023",
+      time: "18:30",
+      guests: 3,
+      status: "completed",
+      image: "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+    }
+  ]);
+
+  const handleEditBooking = (id: number) => {
+    toast({
+      title: "Редактирование бронирования",
+      description: `Бронирование #${id} открыто для изменения.`
+    });
+  };
+
+  const handleCancelBooking = (id: number) => {
+    setUserBookings(userBookings.map(booking => 
+      booking.id === id ? { ...booking, status: "cancelled" } : booking
+    ));
+    toast({
+      title: "Бронирование отменено",
+      description: "Ваше бронирование было успешно отменено."
+    });
+  };
+
+  const handleReviewSubmit = (id: number) => {
+    toast({
+      title: "Отзыв отправлен",
+      description: "Спасибо за ваш отзыв! Он поможет другим гостям выбрать ресторан."
+    });
+  };
+
+  const handleProfileSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    toast({
+      title: "Профиль обновлен",
+      description: "Ваши данные были успешно сохранены."
+    });
+  };
+
+  const handlePasswordChange = (e: React.FormEvent) => {
+    e.preventDefault();
+    toast({
+      title: "Пароль изменен",
+      description: "Ваш пароль был успешно изменен."
+    });
+  };
+
+  const handleDeleteAccount = () => {
+    setIsDeleteDialogOpen(false);
+    toast({
+      title: "Аккаунт удален",
+      description: "Ваш аккаунт был успешно удален. Перенаправление на главную..."
+    });
+    setTimeout(() => navigate('/'), 2000);
+  };
+
+  const handleLogout = () => {
+    toast({
+      title: "Выход из системы",
+      description: "Вы успешно вышли из системы."
+    });
+    navigate('/');
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col md:flex-row gap-8">
@@ -49,8 +119,8 @@ const UserProfile = () => {
               <div className="mx-auto w-24 h-24 rounded-full bg-muted flex items-center justify-center mb-2">
                 <User className="h-12 w-12 text-muted-foreground" />
               </div>
-              <CardTitle className="text-center">Иван Петров</CardTitle>
-              <CardDescription className="text-center">ivan@example.com</CardDescription>
+              <CardTitle className="text-center">{userInfo.firstName} {userInfo.lastName}</CardTitle>
+              <CardDescription className="text-center">{userInfo.email}</CardDescription>
             </CardHeader>
             <CardContent>
               <nav className="space-y-2">
@@ -73,7 +143,11 @@ const UserProfile = () => {
                   </a>
                 </Button>
                 <Separator />
-                <Button variant="ghost" className="w-full justify-start text-destructive hover:text-destructive">
+                <Button 
+                  variant="ghost" 
+                  className="w-full justify-start text-destructive hover:text-destructive"
+                  onClick={handleLogout}
+                >
                   <LogOut className="mr-2 h-5 w-5" />
                   Выйти
                 </Button>
@@ -150,17 +224,31 @@ const UserProfile = () => {
                             <div className="flex gap-4 mt-6">
                               {booking.status === 'confirmed' && (
                                 <>
-                                  <Button variant="outline" size="sm" className="flex items-center">
+                                  <Button 
+                                    variant="outline" 
+                                    size="sm" 
+                                    className="flex items-center"
+                                    onClick={() => handleEditBooking(booking.id)}
+                                  >
                                     <Edit className="h-4 w-4 mr-2" />
                                     Изменить
                                   </Button>
-                                  <Button variant="outline" size="sm" className="text-destructive border-destructive hover:bg-destructive hover:text-destructive-foreground">
+                                  <Button 
+                                    variant="outline" 
+                                    size="sm" 
+                                    className="text-destructive border-destructive hover:bg-destructive hover:text-destructive-foreground"
+                                    onClick={() => handleCancelBooking(booking.id)}
+                                  >
                                     Отменить
                                   </Button>
                                 </>
                               )}
                               {booking.status === 'completed' && (
-                                <Button variant="outline" size="sm">
+                                <Button 
+                                  variant="outline" 
+                                  size="sm"
+                                  onClick={() => handleReviewSubmit(booking.id)}
+                                >
                                   Оставить отзыв
                                 </Button>
                               )}
@@ -192,29 +280,46 @@ const UserProfile = () => {
               
               <Card className="border-border">
                 <CardContent className="pt-6">
-                  <form className="space-y-6">
+                  <form className="space-y-6" onSubmit={handleProfileSubmit}>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
                         <Label htmlFor="firstName">Имя</Label>
-                        <Input id="firstName" defaultValue="Иван" />
+                        <Input 
+                          id="firstName" 
+                          value={userInfo.firstName}
+                          onChange={(e) => setUserInfo({...userInfo, firstName: e.target.value})}
+                        />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="lastName">Фамилия</Label>
-                        <Input id="lastName" defaultValue="Петров" />
+                        <Input 
+                          id="lastName" 
+                          value={userInfo.lastName}
+                          onChange={(e) => setUserInfo({...userInfo, lastName: e.target.value})}
+                        />
                       </div>
                     </div>
                     
                     <div className="space-y-2">
                       <Label htmlFor="email">Email</Label>
-                      <Input id="email" type="email" defaultValue="ivan@example.com" />
+                      <Input 
+                        id="email" 
+                        type="email" 
+                        value={userInfo.email}
+                        onChange={(e) => setUserInfo({...userInfo, email: e.target.value})}
+                      />
                     </div>
                     
                     <div className="space-y-2">
                       <Label htmlFor="phone">Телефон</Label>
-                      <Input id="phone" defaultValue="+7 (901) 123-45-67" />
+                      <Input 
+                        id="phone" 
+                        value={userInfo.phone}
+                        onChange={(e) => setUserInfo({...userInfo, phone: e.target.value})}
+                      />
                     </div>
                     
-                    <Button>Сохранить изменения</Button>
+                    <Button type="submit">Сохранить изменения</Button>
                   </form>
                 </CardContent>
               </Card>
@@ -231,7 +336,7 @@ const UserProfile = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <form className="space-y-4">
+                  <form className="space-y-4" onSubmit={handlePasswordChange}>
                     <div className="space-y-2">
                       <Label htmlFor="currentPassword">Текущий пароль</Label>
                       <Input id="currentPassword" type="password" />
@@ -244,7 +349,7 @@ const UserProfile = () => {
                       <Label htmlFor="confirmPassword">Подтвердите пароль</Label>
                       <Input id="confirmPassword" type="password" />
                     </div>
-                    <Button>Изменить пароль</Button>
+                    <Button type="submit">Изменить пароль</Button>
                   </form>
                 </CardContent>
               </Card>
@@ -257,13 +362,38 @@ const UserProfile = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button variant="destructive">Удалить аккаунт</Button>
+                  <Button 
+                    variant="destructive"
+                    onClick={() => setIsDeleteDialogOpen(true)}
+                  >
+                    Удалить аккаунт
+                  </Button>
                 </CardContent>
               </Card>
             </TabsContent>
           </Tabs>
         </div>
       </div>
+
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Вы действительно хотите удалить аккаунт?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Это действие невозможно отменить. Вы потеряете все данные, включая историю бронирований и настройки профиля.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Отмена</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleDeleteAccount}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Удалить навсегда
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

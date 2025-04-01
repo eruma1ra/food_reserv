@@ -14,6 +14,8 @@ import UserProfile from "./pages/UserProfile";
 import AdminPanel from "./pages/AdminPanel";
 import NotFound from "./pages/NotFound";
 import AboutPage from "./pages/AboutPage";
+import FAQ from "./pages/FAQ";
+import PartnerPage from "./pages/PartnerPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -40,6 +42,8 @@ const App = () => (
             <Route path="/profile" element={<UserProfile />} />
             <Route path="/admin" element={<AdminPanel />} />
             <Route path="/about" element={<AboutPage />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/partner" element={<PartnerPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>

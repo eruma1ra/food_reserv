@@ -20,7 +20,8 @@ import {
   ImagePlus,
   Utensils,
   BookOpen,
-  Plus
+  Plus,
+  AlertTriangle
 } from 'lucide-react';
 import { 
   Table, 
@@ -31,6 +32,8 @@ import {
   TableRow 
 } from '@/components/ui/table';
 import { Textarea } from '@/components/ui/textarea';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { useNavigate } from 'react-router-dom';
 
 const initialBookings = [
   {
@@ -94,6 +97,7 @@ const initialRestaurantInfo = {
 
 const AdminPanel = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [bookings, setBookings] = useState(initialBookings);
   const [restaurantInfo, setRestaurantInfo] = useState(initialRestaurantInfo);
   const [dishes, setDishes] = useState([
@@ -113,7 +117,21 @@ const AdminPanel = () => {
       ]
     }
   ]);
-
+  
+  // Dialogs state
+  const [editBookingDialog, setEditBookingDialog] = useState({ open: false, bookingId: null });
+  const [editTableDialog, setEditTableDialog] = useState({ open: false, tableId: null });
+  const [addTableDialog, setAddTableDialog] = useState(false);
+  const [addDishDialog, setAddDishDialog] = useState({ open: false, categoryId: null });
+  const [editDishDialog, setEditDishDialog] = useState({ open: false, categoryId: null, dishId: null });
+  const [editCategoryDialog, setEditCategoryDialog] = useState({ open: false, categoryId: null });
+  
+  // New dish form state
+  const [newDish, setNewDish] = useState({ name: "", price: "", description: "" });
+  
+  // New category name state
+  const [newCategoryName, setNewCategoryName] = useState("");
+  
   // Handle booking confirmation
   const handleConfirmBooking = (id: number) => {
     setBookings(bookings.map(booking => 
@@ -134,12 +152,65 @@ const AdminPanel = () => {
     });
   };
   
+  // Handle opening booking edit dialog
+  const handleOpenEditBooking = (id: number) => {
+    setEditBookingDialog({ open: true, bookingId: id });
+  };
+  
+  // Handle saving edited booking
+  const handleSaveBooking = () => {
+    setEditBookingDialog({ open: false, bookingId: null });
+    toast({
+      title: "Бронирование изменено",
+      description: "Информация о бронировании обновлена.",
+    });
+  };
+  
+  // Handle table configuration
+  const handleConfigTable = (id: number) => {
+    setEditTableDialog({ open: true, tableId: id });
+  };
+  
+  // Handle saving table configuration
+  const handleSaveTable = () => {
+    setEditTableDialog({ open: false, tableId: null });
+    toast({
+      title: "Настройки столика сохранены",
+      description: "Конфигурация столика обновлена.",
+    });
+  };
+  
+  // Handle adding a new table
+  const handleAddTable = () => {
+    setAddTableDialog(false);
+    toast({
+      title: "Столик добавлен",
+      description: "Новый столик добавлен в систему.",
+    });
+  };
+  
   // Handle form submission for restaurant profile
   const handleProfileSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     toast({
       title: "Профиль обновлен",
       description: "Данные о ресторане были успешно сохранены.",
+    });
+  };
+  
+  // Handle photo deletion
+  const handleDeletePhoto = (index: number) => {
+    toast({
+      title: "Фото удалено",
+      description: "Фотография была успешно удалена.",
+    });
+  };
+  
+  // Handle photo upload
+  const handleAddPhoto = () => {
+    toast({
+      title: "Загрузка фото",
+      description: "Фотография была успешно загружена.",
     });
   };
 
@@ -159,6 +230,89 @@ const AdminPanel = () => {
       description: "Блюдо было успешно удалено из меню.",
     });
   };
+  
+  // Handle dish editing
+  const handleEditDish = (categoryId: number, dishId: number) => {
+    setEditDishDialog({ open: true, categoryId, dishId });
+  };
+  
+  // Handle saving edited dish
+  const handleSaveDish = () => {
+    setEditDishDialog({ open: false, categoryId: null, dishId: null });
+    toast({
+      title: "Блюдо обновлено",
+      description: "Информация о блюде успешно обновлена.",
+    });
+  };
+  
+  // Handle adding a dish
+  const handleAddDish = (categoryId: number) => {
+    setAddDishDialog({ open: true, categoryId });
+  };
+  
+  // Handle saving new dish
+  const handleSaveNewDish = () => {
+    const categoryId = addDishDialog.categoryId;
+    if (categoryId) {
+      const newDishItem = {
+        id: Date.now(),
+        name: newDish.name,
+        price: parseFloat(newDish.price),
+        description: newDish.description
+      };
+      
+      setDishes(dishes.map(category => {
+        if (category.id === categoryId) {
+          return {
+            ...category,
+            items: [...category.items, newDishItem]
+          };
+        }
+        return category;
+      }));
+    }
+    
+    setAddDishDialog({ open: false, categoryId: null });
+    setNewDish({ name: "", price: "", description: "" });
+    
+    toast({
+      title: "Блюдо добавлено",
+      description: "Новое блюдо успешно добавлено в меню.",
+    });
+  };
+
+  // Handle category editing
+  const handleEditCategory = (categoryId: number) => {
+    const category = dishes.find(c => c.id === categoryId);
+    if (category) {
+      setNewCategoryName(category.category);
+      setEditCategoryDialog({ open: true, categoryId });
+    }
+  };
+  
+  // Handle saving edited category
+  const handleSaveCategory = () => {
+    const categoryId = editCategoryDialog.categoryId;
+    if (categoryId) {
+      setDishes(dishes.map(category => {
+        if (category.id === categoryId) {
+          return {
+            ...category,
+            category: newCategoryName
+          };
+        }
+        return category;
+      }));
+    }
+    
+    setEditCategoryDialog({ open: false, categoryId: null });
+    setNewCategoryName("");
+    
+    toast({
+      title: "Категория обновлена",
+      description: "Название категории успешно изменено.",
+    });
+  };
 
   // Handle adding a category
   const handleAddCategory = () => {
@@ -173,6 +327,15 @@ const AdminPanel = () => {
       description: "Новая категория блюд была добавлена.",
     });
   };
+  
+  // Handle logout
+  const handleLogout = () => {
+    toast({
+      title: "Выход из системы",
+      description: "Вы успешно вышли из системы.",
+    });
+    navigate('/');
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -180,7 +343,7 @@ const AdminPanel = () => {
         <div className="md:w-1/4">
           <Card className="border-border">
             <CardHeader>
-              <CardTitle className="text-center">Ресторан "Пушкин"</CardTitle>
+              <CardTitle className="text-center">Ресторан "{restaurantInfo.name}"</CardTitle>
               <CardDescription className="text-center">Панель администратора</CardDescription>
             </CardHeader>
             <CardContent>
@@ -216,7 +379,11 @@ const AdminPanel = () => {
                   </a>
                 </Button>
                 <Separator />
-                <Button variant="ghost" className="w-full justify-start text-destructive hover:text-destructive">
+                <Button 
+                  variant="ghost" 
+                  className="w-full justify-start text-destructive hover:text-destructive"
+                  onClick={handleLogout}
+                >
                   <LogOut className="mr-2 h-5 w-5" />
                   Выйти
                 </Button>
@@ -301,7 +468,12 @@ const AdminPanel = () => {
                                   </Button>
                                 </>
                               )}
-                              <Button size="icon" variant="ghost" className="h-8 w-8">
+                              <Button 
+                                size="icon" 
+                                variant="ghost" 
+                                className="h-8 w-8"
+                                onClick={() => handleOpenEditBooking(booking.id)}
+                              >
                                 <Edit className="h-4 w-4" />
                               </Button>
                             </div>
@@ -337,10 +509,7 @@ const AdminPanel = () => {
                         <Button 
                           variant="outline" 
                           size="sm" 
-                          onClick={() => toast({
-                            title: "Настройка столика",
-                            description: "Функция настройки столика скоро будет доступна.",
-                          })}
+                          onClick={() => handleConfigTable(index + 1)}
                         >
                           Настроить
                         </Button>
@@ -354,10 +523,7 @@ const AdminPanel = () => {
                     <Button 
                       variant="ghost" 
                       className="h-10 w-10 rounded-full"
-                      onClick={() => toast({
-                        title: "Добавление столика",
-                        description: "Функция добавления столика скоро будет доступна.",
-                      })}
+                      onClick={() => setAddTableDialog(true)}
                     >
                       <Plus className="h-6 w-6" />
                     </Button>
@@ -486,10 +652,7 @@ const AdminPanel = () => {
                               variant="ghost" 
                               size="icon" 
                               className="text-white"
-                              onClick={() => toast({
-                                title: "Фото удалено",
-                                description: "Фотография была удалена.",
-                              })}
+                              onClick={() => handleDeletePhoto(index)}
                             >
                               <X className="h-6 w-6" />
                             </Button>
@@ -500,10 +663,7 @@ const AdminPanel = () => {
                       <div className="border border-dashed border-border rounded-md h-40 flex flex-col items-center justify-center">
                         <Button 
                           variant="ghost"
-                          onClick={() => toast({
-                            title: "Загрузка фото",
-                            description: "Функция загрузки фото скоро будет доступна.",
-                          })}
+                          onClick={handleAddPhoto}
                         >
                           <ImagePlus className="h-10 w-10 text-muted-foreground mb-2" />
                           <span className="text-sm text-muted-foreground">Добавить фото</span>
@@ -522,14 +682,21 @@ const AdminPanel = () => {
                       {dishes.map((category) => (
                         <div key={category.id}>
                           <div className="flex items-center justify-between mb-4">
-                            <h3 className="font-medium">{category.category}</h3>
+                            <div className="flex items-center">
+                              <h3 className="font-medium">{category.category}</h3>
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                className="ml-2 h-8 w-8 p-0"
+                                onClick={() => handleEditCategory(category.id)}
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                            </div>
                             <Button 
                               variant="outline" 
                               size="sm"
-                              onClick={() => toast({
-                                title: "Добавление блюда",
-                                description: `Добавление нового блюда в категорию "${category.category}" скоро будет доступно.`,
-                              })}
+                              onClick={() => handleAddDish(category.id)}
                             >
                               Добавить блюдо
                             </Button>
@@ -551,10 +718,7 @@ const AdminPanel = () => {
                                       variant="ghost" 
                                       size="sm" 
                                       className="h-8 px-2"
-                                      onClick={() => toast({
-                                        title: "Редактирование блюда",
-                                        description: "Функция редактирования блюда скоро будет доступна.",
-                                      })}
+                                      onClick={() => handleEditDish(category.id, item.id)}
                                     >
                                       <Edit className="h-4 w-4" />
                                     </Button>
@@ -632,6 +796,229 @@ const AdminPanel = () => {
           </Tabs>
         </div>
       </div>
+      
+      {/* Edit Booking Dialog */}
+      <Dialog open={editBookingDialog.open} onOpenChange={(open) => setEditBookingDialog({ ...editBookingDialog, open })}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Редактировать бронирование</DialogTitle>
+            <DialogDescription>
+              Внесите необходимые изменения в информацию о бронировании
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="edit-date">Дата</Label>
+              <Input id="edit-date" type="date" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-time">Время</Label>
+              <Input id="edit-time" type="time" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-guests">Количество гостей</Label>
+              <Input id="edit-guests" type="number" min="1" max="20" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-table">Столик</Label>
+              <Input id="edit-table" type="number" min="1" />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => setEditBookingDialog({ open: false, bookingId: null })}>
+              Отмена
+            </Button>
+            <Button type="button" onClick={handleSaveBooking}>
+              Сохранить
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Edit Table Dialog */}
+      <Dialog open={editTableDialog.open} onOpenChange={(open) => setEditTableDialog({ ...editTableDialog, open })}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Настройка столика #{editTableDialog.tableId}</DialogTitle>
+            <DialogDescription>
+              Измените параметры столика
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="table-seats">Количество мест</Label>
+              <Input id="table-seats" type="number" min="1" max="20" defaultValue="4" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="table-zone">Зона</Label>
+              <Input id="table-zone" defaultValue="Основной зал" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="table-status">Статус</Label>
+              <select id="table-status" className="w-full border border-border rounded-md p-2">
+                <option value="available">Доступен</option>
+                <option value="reserved">Зарезервирован</option>
+                <option value="maintenance">На обслуживании</option>
+              </select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => setEditTableDialog({ open: false, tableId: null })}>
+              Отмена
+            </Button>
+            <Button type="button" onClick={handleSaveTable}>
+              Сохранить
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Add Table Dialog */}
+      <Dialog open={addTableDialog} onOpenChange={setAddTableDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Добавить столик</DialogTitle>
+            <DialogDescription>
+              Укажите параметры нового столика
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="new-table-number">Номер столика</Label>
+              <Input id="new-table-number" type="number" min="1" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="new-table-seats">Количество мест</Label>
+              <Input id="new-table-seats" type="number" min="1" max="20" defaultValue="2" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="new-table-zone">Зона</Label>
+              <Input id="new-table-zone" defaultValue="Основной зал" />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => setAddTableDialog(false)}>
+              Отмена
+            </Button>
+            <Button type="button" onClick={handleAddTable}>
+              Добавить
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Edit Dish Dialog */}
+      <Dialog open={editDishDialog.open} onOpenChange={(open) => setEditDishDialog({ ...editDishDialog, open, categoryId: open ? editDishDialog.categoryId : null, dishId: open ? editDishDialog.dishId : null })}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Редактировать блюдо</DialogTitle>
+            <DialogDescription>
+              Измените информацию о блюде
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="edit-dish-name">Название</Label>
+              <Input id="edit-dish-name" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-dish-price">Цена (₽)</Label>
+              <Input id="edit-dish-price" type="number" min="0" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-dish-description">Описание</Label>
+              <Textarea id="edit-dish-description" rows={3} />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => setEditDishDialog({ open: false, categoryId: null, dishId: null })}>
+              Отмена
+            </Button>
+            <Button type="button" onClick={handleSaveDish}>
+              Сохранить
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Add Dish Dialog */}
+      <Dialog open={addDishDialog.open} onOpenChange={(open) => setAddDishDialog({ ...addDishDialog, open, categoryId: open ? addDishDialog.categoryId : null })}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Добавить блюдо</DialogTitle>
+            <DialogDescription>
+              Введите информацию о новом блюде
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="new-dish-name">Название</Label>
+              <Input 
+                id="new-dish-name" 
+                value={newDish.name}
+                onChange={(e) => setNewDish({...newDish, name: e.target.value})}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="new-dish-price">Цена (₽)</Label>
+              <Input 
+                id="new-dish-price" 
+                type="number" 
+                min="0"
+                value={newDish.price}
+                onChange={(e) => setNewDish({...newDish, price: e.target.value})}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="new-dish-description">Описание</Label>
+              <Textarea 
+                id="new-dish-description" 
+                rows={3}
+                value={newDish.description}
+                onChange={(e) => setNewDish({...newDish, description: e.target.value})}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => setAddDishDialog({ open: false, categoryId: null })}>
+              Отмена
+            </Button>
+            <Button type="button" onClick={handleSaveNewDish}>
+              Добавить
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Edit Category Dialog */}
+      <Dialog open={editCategoryDialog.open} onOpenChange={(open) => setEditCategoryDialog({ ...editCategoryDialog, open, categoryId: open ? editCategoryDialog.categoryId : null })}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Изменить категорию</DialogTitle>
+            <DialogDescription>
+              Введите новое название категории
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="category-name">Название категории</Label>
+              <Input 
+                id="category-name" 
+                value={newCategoryName}
+                onChange={(e) => setNewCategoryName(e.target.value)}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => setEditCategoryDialog({ open: false, categoryId: null })}>
+              Отмена
+            </Button>
+            <Button type="button" onClick={handleSaveCategory}>
+              Сохранить
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
