@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import RestaurantCard from '@/components/RestaurantCard';
@@ -117,7 +116,8 @@ const RestaurantsPage = () => {
     if (filterOptions.search) {
       const searchLower = filterOptions.search.toLowerCase();
       result = result.filter(restaurant => 
-        restaurant.name.toLowerCase().includes(searchLower)
+        restaurant.name.toLowerCase().includes(searchLower) ||
+        restaurant.cuisine.toLowerCase().includes(searchLower)
       );
     }
     

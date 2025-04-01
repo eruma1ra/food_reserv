@@ -25,14 +25,14 @@ const featuredRestaurants = [{
   address: "Москва, Смоленская площадь, 3",
   openHours: "12:00 - 00:00"
 }, {
-  id: 3,
-  name: "Белуга",
-  cuisine: "Русская, Европейская",
+  id: 5,
+  name: "Twins Garden",
+  cuisine: "Современная русская",
   rating: 4.9,
   priceLevel: "₽₽₽₽",
-  image: "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-  address: "Москва, ул. Моховая, 15/1",
-  openHours: "12:00 - 00:00"
+  image: "https://images.unsplash.com/photo-1554679665-f5537f187268?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+  address: "Москва, Страстной бульвар, 8А",
+  openHours: "18:00 - 00:00"
 }];
 
 const popularCuisines = [{
@@ -65,6 +65,8 @@ const Home = () => {
     
     if (searchQuery?.trim()) {
       navigate(`/restaurants?search=${encodeURIComponent(searchQuery.trim())}`);
+    } else {
+      navigate('/restaurants');
     }
   };
 
