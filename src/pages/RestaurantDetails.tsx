@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { 
   Star, 
@@ -7,19 +7,13 @@ import {
   Phone, 
   Globe, 
   Clock, 
-  DollarSign,
-  Users,
-  Calendar,
   ChevronRight,
   ChevronLeft,
   Utensils
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Card,
-  CardContent,
-} from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -41,56 +35,172 @@ import { Label } from '@/components/ui/label';
 import { ru } from 'date-fns/locale';
 import { format } from 'date-fns';
 
-// Пример данных о ресторане
-const restaurantData = {
-  id: 1,
-  name: "Пушкин",
-  description: "Легендарный ресторан русской кухни в Москве, воссоздающий атмосферу дворянской усадьбы XIX века. Здесь гости могут насладиться классическими русскими блюдами, приготовленными по старинным рецептам, в интерьере, напоминающем библиотеку аристократического дома с антикварной мебелью, книжными полками и камином.",
-  cuisine: "Русская",
-  rating: 4.8,
-  reviewCount: 1245,
-  priceLevel: "₽₽₽",
-  address: "Москва, Тверской бульвар, 26А",
-  phone: "+7 (495) 123-45-67",
-  website: "https://cafe-pushkin.ru",
-  openHours: "12:00 - 00:00",
-  images: [
-    "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1552566626-52f8b828add9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1544148103-0773bf10d330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
-  ],
-  menu: [
-    {
-      category: "Закуски",
-      items: [
-        { name: "Оливье с телятиной", price: 850, description: "Классический русский салат с телячьим языком и перепелиными яйцами." },
-        { name: "Сельдь под шубой", price: 720, description: "Традиционный слоеный салат с филе сельди, овощами и майонезом." },
-        { name: "Борщ с пампушками", price: 890, description: "Наваристый борщ с говядиной, подается с чесночными пампушками и сметаной." }
-      ]
-    },
-    {
-      category: "Основные блюда",
-      items: [
-        { name: "Бефстроганов с картофельным пюре", price: 1450, description: "Нежная говядина в сливочном соусе с грибами." },
-        { name: "Котлеты Пожарские", price: 1250, description: "Нежные куриные котлеты в хрустящей панировке с картофельным пюре." },
-        { name: "Стерлядь в шампанском", price: 2300, description: "Филе стерляди, приготовленное на пару в соусе из шампанского." }
-      ]
-    },
-    {
-      category: "Десерты",
-      items: [
-        { name: "Медовик", price: 650, description: "Традиционный слоеный медовый торт со сметанным кремом." },
-        { name: "Анна Павлова", price: 750, description: "Воздушное безе с ванильным кремом и свежими ягодами." },
-        { name: "Сырники со сметаной", price: 580, description: "Домашние сырники из творога, подаются со сметаной и вареньем." }
-      ]
-    }
-  ],
-  reviews: [
-    { id: 1, author: "Александр", rating: 5, date: "15.07.2023", text: "Потрясающее обслуживание и атмосфера. Блюда выше всяких похвал!" },
-    { id: 2, author: "Елена", rating: 4, date: "03.06.2023", text: "Очень вкусно, но цены высоковаты. Тем не менее, стоит посетить." },
-    { id: 3, author: "Михаил", rating: 5, date: "22.05.2023", text: "Одно из лучших заведений в Москве. Рекомендую бефстроганов и медовик!" }
-  ]
-};
+// Пример данных о ресторанах
+const restaurantsData = [
+  {
+    id: 1,
+    name: "Пушкин",
+    description: "Легендарный ресторан русской кухни в Москве, воссоздающий атмосферу дворянской усадьбы XIX века. Здесь гости могут насладиться классическими русскими блюдами, приготовленными по старинным рецептам, в интерьере, напоминающем библиотеку аристократического дома с антикварной мебелью, книжными полками и камином.",
+    cuisine: "Русская",
+    rating: 4.8,
+    reviewCount: 1245,
+    priceLevel: "₽₽₽",
+    address: "Москва, Тверской бульвар, 26А",
+    phone: "+7 (495) 123-45-67",
+    website: "https://cafe-pushkin.ru",
+    openHours: "12:00 - 00:00",
+    images: [
+      "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1552566626-52f8b828add9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1544148103-0773bf10d330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+    ],
+    menu: [
+      {
+        category: "Закуски",
+        items: [
+          { name: "Оливье с телятиной", price: 850, description: "Классический русский салат с телячьим языком и перепелиными яйцами." },
+          { name: "Сельдь под шубой", price: 720, description: "Традиционный слоеный салат с филе сельди, овощами и майонезом." },
+          { name: "Борщ с пампушками", price: 890, description: "Наваристый борщ с говядиной, подается с чесночными пампушками и сметаной." }
+        ]
+      },
+      {
+        category: "Основные блюда",
+        items: [
+          { name: "Бефстроганов с картофельным пюре", price: 1450, description: "Нежная говядина в сливочном соусе с грибами." },
+          { name: "Котлеты Пожарские", price: 1250, description: "Нежные куриные котлеты в хрустящей панировке с картофельным пюре." },
+          { name: "Стерлядь в шампанском", price: 2300, description: "Филе стерляди, приготовленное на пару в соусе из шампанского." }
+        ]
+      },
+      {
+        category: "Десерты",
+        items: [
+          { name: "Медовик", price: 650, description: "Традиционный слоеный медовый торт со сметанным кремом." },
+          { name: "Анна Павлова", price: 750, description: "Воздушное безе с ванильным кремом и свежими ягодами." },
+          { name: "Сырники со сметаной", price: 580, description: "Домашние сырники из творога, подаются со сметаной и вареньем." }
+        ]
+      }
+    ],
+    reviews: [
+      { id: 1, author: "Александр", rating: 5, date: "15.07.2023", text: "Потрясающее обслуживание и атмосфера. Блюда выше всяких похвал!" },
+      { id: 2, author: "Елена", rating: 4, date: "03.06.2023", text: "Очень вкусно, но цены высоковаты. Тем не менее, стоит посетить." },
+      { id: 3, author: "Михаил", rating: 5, date: "22.05.2023", text: "Одно из лучших заведений в Москве. Рекомендую бефстроганов и медовик!" }
+    ]
+  },
+  {
+    id: 2,
+    name: "Сахалин",
+    description: "Ресторан морепродуктов с панорамным видом на Москву. В меню представлены блюда из свежайших морепродуктов, доставляемых ежедневно.",
+    cuisine: "Морепродукты",
+    rating: 4.7,
+    reviewCount: 876,
+    priceLevel: "₽₽₽₽",
+    address: "Москва, Смоленская площадь, 3",
+    phone: "+7 (495) 782-12-62",
+    website: "https://sakhalin-moscow.ru",
+    openHours: "12:00 - 00:00",
+    images: [
+      "https://images.unsplash.com/photo-1544148103-0773bf10d330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1546069901-d5bfd2cbfb1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1579684947550-22e945225d9a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+    ],
+    menu: [
+      {
+        category: "Закуски",
+        items: [
+          { name: "Устрицы Хасанские", price: 650, description: "Свежие устрицы с лимоном и уксусом с луком шалот." },
+          { name: "Тартар из тунца", price: 980, description: "Нежный тартар из свежего тунца с авокадо и соусом понзу." }
+        ]
+      },
+      {
+        category: "Основные блюда",
+        items: [
+          { name: "Краб камчатский на гриле", price: 3200, description: "Свежий камчатский краб, приготовленный на гриле с соусом из сливочного масла." },
+          { name: "Черная треска мисо", price: 2700, description: "Филе черной трески, маринованное в мисо и запеченное до золотистой корочки." }
+        ]
+      }
+    ],
+    reviews: [
+      { id: 1, author: "Дмитрий", rating: 5, date: "10.08.2023", text: "Потрясающий вид и превосходная кухня! Однозначно стоит своих денег." },
+      { id: 2, author: "Ксения", rating: 4, date: "25.07.2023", text: "Прекрасный ресторан для особых случаев. Морепродукты очень свежие." }
+    ]
+  },
+  {
+    id: 3,
+    name: "Белуга",
+    description: "Роскошный ресторан с видом на Кремль, специализирующийся на икре и морепродуктах высочайшего качества.",
+    cuisine: "Русская, Европейская",
+    rating: 4.9,
+    reviewCount: 732,
+    priceLevel: "₽₽₽₽",
+    address: "Москва, ул. Моховая, 15/1",
+    phone: "+7 (495) 901-03-36",
+    website: "https://beluga-caviar.ru",
+    openHours: "12:00 - 00:00",
+    images: [
+      "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1592861956120-e524fc739696?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1602520628661-8862487eee24?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+    ],
+    menu: [
+      {
+        category: "Икра",
+        items: [
+          { name: "Икра белуги", price: 18500, description: "50 грамм икры белуги с традиционными гарнирами." },
+          { name: "Икра осетра", price: 9800, description: "50 грамм икры осетра с традиционными гарнирами." }
+        ]
+      },
+      {
+        category: "Основные блюда",
+        items: [
+          { name: "Осетрина на гриле", price: 3900, description: "Стейк из осетрины с соусом из белого вина и картофельным пюре." },
+          { name: "Телятина Россини", price: 4200, description: "Медальоны из телятины с фуа-гра и трюфельным соусом." }
+        ]
+      }
+    ],
+    reviews: [
+      { id: 1, author: "Сергей", rating: 5, date: "05.09.2023", text: "Лучшая икра, которую я когда-либо пробовал. Сервис на высочайшем уровне." },
+      { id: 2, author: "Анастасия", rating: 5, date: "20.08.2023", text: "Прекрасный вид на Кремль, изысканная кухня и безупречное обслуживание." }
+    ]
+  },
+  {
+    id: 4,
+    name: "Северяне",
+    description: "Современный ресторан скандинавской кухни с акцентом на сезонные продукты и минималистичную подачу.",
+    cuisine: "Скандинавская",
+    rating: 4.5,
+    reviewCount: 562,
+    priceLevel: "₽₽",
+    address: "Москва, Большая Никитская улица, 12",
+    phone: "+7 (499) 348-84-47",
+    website: "https://severyane.moscow",
+    openHours: "12:00 - 00:00",
+    images: [
+      "https://images.unsplash.com/photo-1590846406792-0adc7f938f1d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1578474846511-04ba529f0b88?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1578474846511-04ba529f0b88?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+    ],
+    menu: [
+      {
+        category: "Закуски",
+        items: [
+          { name: "Сельдь с картофелем", price: 520, description: "Филе балтийской сельди с теплым картофелем и горчичным соусом." },
+          { name: "Тартар из оленины", price: 780, description: "Тартар из мяса северного оленя с ягодами можжевельника и хрустящим хлебом." }
+        ]
+      },
+      {
+        category: "Основные блюда",
+        items: [
+          { name: "Лосось с пюре из корнеплодов", price: 1150, description: "Филе лосося с пюре из сезонных корнеплодов и укропным маслом." },
+          { name: "Утиная грудка с брусничным соусом", price: 1280, description: "Запеченная утиная грудка с брусничным соусом и печеными яблоками." }
+        ]
+      }
+    ],
+    reviews: [
+      { id: 1, author: "Павел", rating: 4, date: "12.07.2023", text: "Интересная скандинавская кухня, демократичные цены и приятная атмосфера." },
+      { id: 2, author: "Мария", rating: 5, date: "01.06.2023", text: "Очень вкусно и необычно. Отдельное спасибо за десерты!" }
+    ]
+  }
+];
 
 // Функция для отображения звездного рейтинга
 const RatingStars = ({ rating }: { rating: number }) => {
@@ -116,14 +226,37 @@ const RestaurantDetails = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [time, setTime] = useState<string>('19:00');
   const [guests, setGuests] = useState<string>('2');
+  const [restaurantData, setRestaurantData] = useState<any>(null);
+  
+  useEffect(() => {
+    // Find the restaurant by id from the params
+    const restaurant = restaurantsData.find(r => r.id === Number(id));
+    if (restaurant) {
+      setRestaurantData(restaurant);
+      setCurrentImageIndex(0); // Reset image index when changing restaurants
+    }
+  }, [id]);
   
   const nextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % restaurantData.images.length);
+    if (restaurantData) {
+      setCurrentImageIndex((prev) => (prev + 1) % restaurantData.images.length);
+    }
   };
   
   const prevImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + restaurantData.images.length) % restaurantData.images.length);
+    if (restaurantData) {
+      setCurrentImageIndex((prev) => (prev - 1 + restaurantData.images.length) % restaurantData.images.length);
+    }
   };
+
+  if (!restaurantData) {
+    return (
+      <div className="container mx-auto px-4 py-24 text-center">
+        <h2 className="text-2xl font-bold">Ресторан не найден</h2>
+        <p className="mt-4">К сожалению, запрашиваемый ресторан не существует.</p>
+      </div>
+    );
+  }
   
   return (
     <div>
@@ -234,7 +367,7 @@ const RestaurantDetails = () => {
                   {/* Photo Gallery */}
                   <h2 className="text-2xl font-heading font-bold mb-4">Галерея</h2>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {restaurantData.images.map((image, index) => (
+                    {restaurantData.images.map((image: string, index: number) => (
                       <div key={index} className="rounded-lg overflow-hidden h-60">
                         <img 
                           src={image} 
@@ -252,14 +385,14 @@ const RestaurantDetails = () => {
                   <h2 className="text-2xl font-heading font-bold mb-6">Меню</h2>
                   
                   <div className="space-y-8">
-                    {restaurantData.menu.map((category) => (
+                    {restaurantData.menu.map((category: any) => (
                       <div key={category.category}>
                         <h3 className="text-xl font-heading font-semibold mb-4 flex items-center">
                           <Utensils className="h-5 w-5 mr-2 text-primary" />
                           {category.category}
                         </h3>
                         <div className="space-y-4">
-                          {category.items.map((item) => (
+                          {category.items.map((item: any) => (
                             <div 
                               key={item.name}
                               className="p-4 border border-border rounded-lg bg-card"
@@ -293,7 +426,7 @@ const RestaurantDetails = () => {
                   </div>
                   
                   <div className="grid grid-cols-1 gap-6 mb-8">
-                    {restaurantData.reviews.map((review) => (
+                    {restaurantData.reviews.map((review: any) => (
                       <div 
                         key={review.id} 
                         className="p-6 border border-border rounded-lg bg-card"

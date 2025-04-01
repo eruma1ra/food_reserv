@@ -1,5 +1,7 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
+
 const Footer = () => {
   return <footer className="py-10 mt-16 bg-[#0f0f0f]/[0.31]">
       <div className="container mx-auto px-4">
@@ -20,19 +22,19 @@ const Footer = () => {
             <h3 className="text-lg font-heading font-bold mb-4">Клиентам</h3>
             <ul className="space-y-2">
               <li><Link to="/restaurants" className="text-muted-foreground hover:text-primary transition-colors">Рестораны</Link></li>
-              <li><Link to="/bookings" className="text-muted-foreground hover:text-primary transition-colors">Мои бронирования</Link></li>
-              <li><Link to="/reviews" className="text-muted-foreground hover:text-primary transition-colors">Отзывы</Link></li>
-              <li><Link to="/faq" className="text-muted-foreground hover:text-primary transition-colors">Часто задаваемые вопросы</Link></li>
+              <li><Link to="/profile" className="text-muted-foreground hover:text-primary transition-colors">Мои бронирования</Link></li>
+              <li><Link to="/about" className="text-muted-foreground hover:text-primary transition-colors">О сервисе</Link></li>
+              <li><Link to="/about" className="text-muted-foreground hover:text-primary transition-colors">Часто задаваемые вопросы</Link></li>
             </ul>
           </div>
           
           <div>
             <h3 className="text-lg font-heading font-bold mb-4">Ресторанам</h3>
             <ul className="space-y-2">
-              <li><Link to="/partners" className="text-muted-foreground hover:text-primary transition-colors">Стать партнером</Link></li>
+              <li><Link to="/about" className="text-muted-foreground hover:text-primary transition-colors">Стать партнером</Link></li>
               <li><Link to="/admin" className="text-muted-foreground hover:text-primary transition-colors">Панель ресторана</Link></li>
-              <li><Link to="/analytics" className="text-muted-foreground hover:text-primary transition-colors">Аналитика</Link></li>
-              <li><Link to="/help" className="text-muted-foreground hover:text-primary transition-colors">Помощь</Link></li>
+              <li><Link to="/about" className="text-muted-foreground hover:text-primary transition-colors">Аналитика</Link></li>
+              <li><Link to="/about" className="text-muted-foreground hover:text-primary transition-colors">Помощь</Link></li>
             </ul>
           </div>
           
@@ -52,4 +54,5 @@ const Footer = () => {
       </div>
     </footer>;
 };
+
 export default Footer;
