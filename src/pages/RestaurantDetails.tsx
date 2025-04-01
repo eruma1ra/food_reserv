@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { 
@@ -177,7 +178,7 @@ const restaurantsData = [
     images: [
       "https://images.unsplash.com/photo-1590846406792-0adc7f938f1d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
       "https://images.unsplash.com/photo-1578474846511-04ba529f0b88?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1578474846511-04ba529f0b88?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+      "https://images.unsplash.com/photo-1607516652104-ff3b212e5e5d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
     ],
     menu: [
       {
@@ -198,6 +199,98 @@ const restaurantsData = [
     reviews: [
       { id: 1, author: "Павел", rating: 4, date: "12.07.2023", text: "Интересная скандинавская кухня, демократичные цены и приятная атмосфера." },
       { id: 2, author: "Мария", rating: 5, date: "01.06.2023", text: "Очень вкусно и необычно. Отдельное спасибо за десерты!" }
+    ]
+  },
+  {
+    id: 5,
+    name: "Twins Garden",
+    description: "Инновационный ресторан от братьев Березуцких, сочетающий современные кулинарные техники с органическими продуктами с собственной фермы.",
+    cuisine: "Современная русская",
+    rating: 4.9,
+    reviewCount: 645,
+    priceLevel: "₽₽₽₽",
+    address: "Москва, Страстной бульвар, 8А",
+    phone: "+7 (499) 112-33-55",
+    website: "https://twinsgarden.ru",
+    openHours: "18:00 - 00:00",
+    images: [
+      "https://images.unsplash.com/photo-1554679665-f5537f187268?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1600891964599-f61f2a057224?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1592417817098-8fd3d9eb14a5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+    ],
+    menu: [
+      {
+        category: "Сеты",
+        items: [
+          { name: "Дегустационный сет 'Огород'", price: 7500, description: "Сет из 8 блюд, основанных на сезонных овощах с фермы." },
+          { name: "Дегустационный сет 'Гастрономическое путешествие'", price: 9800, description: "12 перемен блюд, представляющих кулинарные традиции разных регионов России." }
+        ]
+      },
+      {
+        category: "Основные блюда",
+        items: [
+          { name: "Томленая утка с тыквой", price: 3200, description: "Утка, томленая с травами 24 часа, с пюре из тыквы и соусом из черной смородины." },
+          { name: "Говяжья вырезка с трюфелем", price: 3800, description: "Вырезка из мраморной говядины с трюфельным соусом и корнеплодами." }
+        ]
+      },
+      {
+        category: "Десерты",
+        items: [
+          { name: "Ферментированная груша", price: 950, description: "Груша с фермы, ферментированная с пряностями, с шоколадным ганашем." },
+          { name: "Мороженое из березового сока", price: 780, description: "Авторское мороженое из собранного березового сока с хрустящей меренгой." }
+        ]
+      }
+    ],
+    reviews: [
+      { id: 1, author: "Виктория", rating: 5, date: "07.09.2023", text: "Удивительные вкусы и текстуры, невероятная подача. Настоящее гастрономическое путешествие!" },
+      { id: 2, author: "Игорь", rating: 5, date: "15.08.2023", text: "Один из лучших ресторанов Москвы. Всегда удивляют новыми сочетаниями вкусов." },
+      { id: 3, author: "Алиса", rating: 4, date: "03.07.2023", text: "Очень достойно, особенно впечатлил дегустационный сет. Высокая кухня в лучшем виде." }
+    ]
+  },
+  {
+    id: 6,
+    name: "Горыныч",
+    description: "Ресторан с открытым огнем, где блюда готовятся в дровяных печах и на открытом гриле прямо перед гостями.",
+    cuisine: "Русская, Пиццерия",
+    rating: 4.6,
+    reviewCount: 890,
+    priceLevel: "₽₽₽",
+    address: "Москва, Рождественский бульвар, 1",
+    phone: "+7 (495) 995-19-19",
+    website: "https://gorynich.com",
+    openHours: "12:00 - 00:00",
+    images: [
+      "https://images.unsplash.com/photo-1552566626-52f8b828add9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1564759298141-cef86f51d3d3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1483732594212-58fdd5ef8f31?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+    ],
+    menu: [
+      {
+        category: "Из печи",
+        items: [
+          { name: "Печеный картофель с икрой", price: 1250, description: "Запеченный в углях картофель с форелевой икрой и сметаной." },
+          { name: "Фермерский цыпленок табака", price: 1450, description: "Цыпленок, приготовленный под прессом на открытом огне, с аджикой." }
+        ]
+      },
+      {
+        category: "Пицца",
+        items: [
+          { name: "Пицца с белыми грибами", price: 950, description: "Тесто на закваске, белые грибы, сыр страчателла, трюфельное масло." },
+          { name: "Пицца 'Горыныч'", price: 1200, description: "Авторская пицца с копченой олениной, вялеными томатами и сыром горгонзола." }
+        ]
+      },
+      {
+        category: "Десерты",
+        items: [
+          { name: "Наполеон", price: 650, description: "Классический слоеный торт с заварным кремом, приготовленный по семейному рецепту." },
+          { name: "Печеное яблоко", price: 580, description: "Яблоко, запеченное в печи с медом и орехами, с шариком ванильного мороженого." }
+        ]
+      }
+    ],
+    reviews: [
+      { id: 1, author: "Дмитрий", rating: 5, date: "22.08.2023", text: "Отличный ресторан! Все блюда готовятся на открытом огне, атмосфера уютная, и вкус на высоте." },
+      { id: 2, author: "Светлана", rating: 4, date: "14.07.2023", text: "Очень вкусная пицца из печи, определенно стоит попробовать." },
+      { id: 3, author: "Артем", rating: 5, date: "01.06.2023", text: "Прекрасная кухня, приятный персонал, интересная концепция с открытой кухней." }
     ]
   }
 ];
