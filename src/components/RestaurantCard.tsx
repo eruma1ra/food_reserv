@@ -27,9 +27,19 @@ const RestaurantCard: React.FC<RestaurantCardProps> = ({
   address,
   openHours
 }) => {
-  // Fallback image if the provided one fails to load
+  // Enhanced fallback mechanism with multiple backup options
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    e.currentTarget.src = "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80";
+    // Try with a set of restaurant-themed fallback images
+    const fallbackImages = [
+      "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1552566626-52f8b828add9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1514933651103-005eec06c04b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1559339352-11d035aa65de?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+    ];
+    
+    // Get a deterministic fallback based on restaurant ID to ensure consistency
+    const fallbackIndex = id % fallbackImages.length;
+    e.currentTarget.src = fallbackImages[fallbackIndex];
   };
   
   return (
@@ -43,6 +53,7 @@ const RestaurantCard: React.FC<RestaurantCardProps> = ({
               className="w-full h-full object-cover"
               onError={handleImageError}
               loading="lazy"
+              fetchPriority="high"
             />
           </AspectRatio>
           <div className="absolute top-3 right-3 flex gap-1">

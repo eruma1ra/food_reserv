@@ -17,11 +17,13 @@ import AboutPage from "./pages/AboutPage";
 import FAQ from "./pages/FAQ";
 import PartnerPage from "./pages/PartnerPage";
 
+// Create a responsive query client with improved configurations
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
       staleTime: 5 * 60 * 1000, // 5 minutes
+      retry: 1, // Reduce retries to avoid excessive network requests on mobile
     },
   },
 });

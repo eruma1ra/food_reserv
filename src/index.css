@@ -60,6 +60,29 @@
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading font-bold;
   }
+  
+  /* Improved mobile text handling */
+  h1 {
+    @apply text-2xl sm:text-4xl md:text-5xl;
+  }
+  
+  h2 {
+    @apply text-xl sm:text-2xl md:text-3xl;
+  }
+  
+  h3 {
+    @apply text-lg sm:text-xl;
+  }
+  
+  /* Ensure content readability on mobile */
+  p, span, div {
+    @apply text-sm sm:text-base;
+  }
+  
+  /* Force text wrapping to prevent overflow on mobile */
+  button, a, label, input, select, textarea {
+    @apply break-words;
+  }
 }
 
 @layer components {
@@ -73,5 +96,30 @@
   
   .text-gradient {
     @apply bg-gradient-to-r from-primary to-red-400 bg-clip-text text-transparent;
+  }
+  
+  /* Mobile responsive navigation */
+  .mobile-nav-item {
+    @apply w-full py-2 px-3 text-sm;
+  }
+  
+  /* Improve mobile menu appearance */
+  .hamburger-menu {
+    @apply p-2 max-h-[80vh] overflow-y-auto;
+  }
+  
+  /* Ensure search elements are responsive */
+  .search-input {
+    @apply w-full max-w-full text-sm;
+  }
+  
+  /* Fix badge text overflow */
+  .badge-text {
+    @apply truncate max-w-full;
+  }
+  
+  /* Fix mobile cuisine buttons */
+  .cuisine-button {
+    @apply whitespace-nowrap text-xs sm:text-sm px-2 sm:px-4;
   }
 }
