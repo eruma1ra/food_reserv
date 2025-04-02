@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import RestaurantCard from '@/components/RestaurantCard';
@@ -194,13 +195,13 @@ const RestaurantsPage = () => {
   const displayedRestaurants = filteredRestaurants.slice(0, visibleCount);
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-heading font-bold">Рестораны</h1>
-        <p className="text-muted-foreground mt-2">Найдите и забронируйте столик в лучших ресторанах</p>
+    <div className="container mx-auto px-4 py-6 md:py-8">
+      <div className="mb-6 md:mb-8">
+        <h1 className="text-2xl md:text-4xl font-heading font-bold">Рестораны</h1>
+        <p className="text-xs sm:text-sm text-muted-foreground mt-2">Найдите и забронируйте столик в лучших ресторанах</p>
       </div>
       
-      <div className="flex flex-col md:flex-row gap-8">
+      <div className="flex flex-col md:flex-row gap-6 md:gap-8">
         <div className="md:w-1/4">
           <RestaurantFilters 
             initialFilters={filterOptions}
@@ -210,12 +211,12 @@ const RestaurantsPage = () => {
         
         <div className="md:w-3/4">
           {displayedRestaurants.length === 0 ? (
-            <div className="text-center py-12">
-              <h3 className="text-xl font-medium mb-2">Рестораны не найдены</h3>
-              <p className="text-muted-foreground">Попробуйте изменить параметры фильтров</p>
+            <div className="text-center py-8 md:py-12">
+              <h3 className="text-lg md:text-xl font-medium mb-2">Рестораны не найдены</h3>
+              <p className="text-xs sm:text-sm text-muted-foreground">Попробуйте изменить параметры фильтров</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
               {displayedRestaurants.map(restaurant => (
                 <RestaurantCard key={restaurant.id} {...restaurant} />
               ))}
@@ -223,8 +224,8 @@ const RestaurantsPage = () => {
           )}
           
           {visibleCount < filteredRestaurants.length && (
-            <div className="mt-8 flex justify-center">
-              <Button variant="outline" onClick={handleShowMore}>Показать ещё</Button>
+            <div className="mt-6 md:mt-8 flex justify-center">
+              <Button variant="outline" onClick={handleShowMore} className="text-xs sm:text-sm">Показать ещё</Button>
             </div>
           )}
         </div>

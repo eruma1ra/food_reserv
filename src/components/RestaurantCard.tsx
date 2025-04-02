@@ -27,14 +27,14 @@ const RestaurantCard: React.FC<RestaurantCardProps> = ({
   address,
   openHours
 }) => {
-  // Enhanced fallback mechanism with multiple backup options
+  // Enhanced fallback mechanism with reliable images
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    // Try with a set of restaurant-themed fallback images
+    // More reliable set of restaurant-themed fallback images
     const fallbackImages = [
-      "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1552566626-52f8b828add9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1514933651103-005eec06c04b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1559339352-11d035aa65de?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+      "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1559339352-11d035aa65de?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1587899897387-091ebd01a6b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1569975484763-8a83d0f6dea6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
     ];
     
     // Get a deterministic fallback based on restaurant ID to ensure consistency
@@ -53,7 +53,6 @@ const RestaurantCard: React.FC<RestaurantCardProps> = ({
               className="w-full h-full object-cover"
               onError={handleImageError}
               loading="lazy"
-              fetchPriority="high"
             />
           </AspectRatio>
           <div className="absolute top-3 right-3 flex gap-1">
