@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -118,7 +117,8 @@ const AdminPanel = () => {
     }
   ]);
   
-  // Dialogs state
+  const [activeTab, setActiveTab] = useState("bookings");
+  
   const [editBookingDialog, setEditBookingDialog] = useState({ open: false, bookingId: null });
   const [editTableDialog, setEditTableDialog] = useState({ open: false, tableId: null });
   const [addTableDialog, setAddTableDialog] = useState(false);
@@ -126,13 +126,10 @@ const AdminPanel = () => {
   const [editDishDialog, setEditDishDialog] = useState({ open: false, categoryId: null, dishId: null });
   const [editCategoryDialog, setEditCategoryDialog] = useState({ open: false, categoryId: null });
   
-  // New dish form state
   const [newDish, setNewDish] = useState({ name: "", price: "", description: "" });
   
-  // New category name state
   const [newCategoryName, setNewCategoryName] = useState("");
   
-  // Handle booking confirmation
   const handleConfirmBooking = (id: number) => {
     setBookings(bookings.map(booking => 
       booking.id === id ? { ...booking, status: "confirmed" } : booking
@@ -143,7 +140,6 @@ const AdminPanel = () => {
     });
   };
   
-  // Handle booking rejection
   const handleRejectBooking = (id: number) => {
     setBookings(bookings.filter(booking => booking.id !== id));
     toast({
@@ -152,12 +148,10 @@ const AdminPanel = () => {
     });
   };
   
-  // Handle opening booking edit dialog
   const handleOpenEditBooking = (id: number) => {
     setEditBookingDialog({ open: true, bookingId: id });
   };
   
-  // Handle saving edited booking
   const handleSaveBooking = () => {
     setEditBookingDialog({ open: false, bookingId: null });
     toast({
@@ -166,12 +160,10 @@ const AdminPanel = () => {
     });
   };
   
-  // Handle table configuration
   const handleConfigTable = (id: number) => {
     setEditTableDialog({ open: true, tableId: id });
   };
   
-  // Handle saving table configuration
   const handleSaveTable = () => {
     setEditTableDialog({ open: false, tableId: null });
     toast({
@@ -180,7 +172,6 @@ const AdminPanel = () => {
     });
   };
   
-  // Handle adding a new table
   const handleAddTable = () => {
     setAddTableDialog(false);
     toast({
@@ -189,7 +180,6 @@ const AdminPanel = () => {
     });
   };
   
-  // Handle form submission for restaurant profile
   const handleProfileSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     toast({
@@ -198,7 +188,6 @@ const AdminPanel = () => {
     });
   };
   
-  // Handle photo deletion
   const handleDeletePhoto = (index: number) => {
     toast({
       title: "Фото удалено",
@@ -206,7 +195,6 @@ const AdminPanel = () => {
     });
   };
   
-  // Handle photo upload
   const handleAddPhoto = () => {
     toast({
       title: "Загрузка фото",
@@ -214,7 +202,6 @@ const AdminPanel = () => {
     });
   };
 
-  // Handle dish removal
   const handleRemoveDish = (categoryId: number, dishId: number) => {
     setDishes(dishes.map(category => {
       if (category.id === categoryId) {
@@ -227,16 +214,14 @@ const AdminPanel = () => {
     }));
     toast({
       title: "Блюдо удалено",
-      description: "Блюдо было успешно удалено из меню.",
+      description: "Блюдо было успешно удалено и�� меню.",
     });
   };
   
-  // Handle dish editing
   const handleEditDish = (categoryId: number, dishId: number) => {
     setEditDishDialog({ open: true, categoryId, dishId });
   };
   
-  // Handle saving edited dish
   const handleSaveDish = () => {
     setEditDishDialog({ open: false, categoryId: null, dishId: null });
     toast({
@@ -245,12 +230,10 @@ const AdminPanel = () => {
     });
   };
   
-  // Handle adding a dish
   const handleAddDish = (categoryId: number) => {
     setAddDishDialog({ open: true, categoryId });
   };
   
-  // Handle saving new dish
   const handleSaveNewDish = () => {
     const categoryId = addDishDialog.categoryId;
     if (categoryId) {
@@ -281,7 +264,6 @@ const AdminPanel = () => {
     });
   };
 
-  // Handle category editing
   const handleEditCategory = (categoryId: number) => {
     const category = dishes.find(c => c.id === categoryId);
     if (category) {
@@ -290,7 +272,6 @@ const AdminPanel = () => {
     }
   };
   
-  // Handle saving edited category
   const handleSaveCategory = () => {
     const categoryId = editCategoryDialog.categoryId;
     if (categoryId) {
@@ -314,7 +295,6 @@ const AdminPanel = () => {
     });
   };
 
-  // Handle adding a category
   const handleAddCategory = () => {
     const newCategory = {
       id: Date.now(),
@@ -328,13 +308,16 @@ const AdminPanel = () => {
     });
   };
   
-  // Handle logout
   const handleLogout = () => {
     toast({
       title: "Выход из системы",
       description: "Вы успешно вышли из системы.",
     });
     navigate('/');
+  };
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
   };
 
   return (
@@ -348,35 +331,45 @@ const AdminPanel = () => {
             </CardHeader>
             <CardContent>
               <nav className="space-y-2">
-                <Button variant="ghost" className="w-full justify-start" asChild>
-                  <a href="#bookings" className="flex items-center">
-                    <BookOpen className="mr-2 h-5 w-5" />
-                    Бронирования
-                  </a>
+                <Button 
+                  variant={activeTab === "bookings" ? "default" : "ghost"} 
+                  className="w-full justify-start" 
+                  onClick={() => handleTabChange("bookings")}
+                >
+                  <BookOpen className="mr-2 h-5 w-5" />
+                  Бронирования
                 </Button>
-                <Button variant="ghost" className="w-full justify-start" asChild>
-                  <a href="#tables" className="flex items-center">
-                    <Utensils className="mr-2 h-5 w-5" />
-                    Столики
-                  </a>
+                <Button 
+                  variant={activeTab === "tables" ? "default" : "ghost"} 
+                  className="w-full justify-start" 
+                  onClick={() => handleTabChange("tables")}
+                >
+                  <Utensils className="mr-2 h-5 w-5" />
+                  Столики
                 </Button>
-                <Button variant="ghost" className="w-full justify-start" asChild>
-                  <a href="#profile" className="flex items-center">
-                    <User className="mr-2 h-5 w-5" />
-                    Профиль ресторана
-                  </a>
+                <Button 
+                  variant={activeTab === "profile" ? "default" : "ghost"} 
+                  className="w-full justify-start" 
+                  onClick={() => handleTabChange("profile")}
+                >
+                  <User className="mr-2 h-5 w-5" />
+                  Профиль ресторана
                 </Button>
-                <Button variant="ghost" className="w-full justify-start" asChild>
-                  <a href="#analytics" className="flex items-center">
-                    <BarChart3 className="mr-2 h-5 w-5" />
-                    Аналитика
-                  </a>
+                <Button 
+                  variant={activeTab === "analytics" ? "default" : "ghost"} 
+                  className="w-full justify-start" 
+                  onClick={() => handleTabChange("analytics")}
+                >
+                  <BarChart3 className="mr-2 h-5 w-5" />
+                  Аналитика
                 </Button>
-                <Button variant="ghost" className="w-full justify-start" asChild>
-                  <a href="#settings" className="flex items-center">
-                    <Settings className="mr-2 h-5 w-5" />
-                    Настройки
-                  </a>
+                <Button 
+                  variant={activeTab === "settings" ? "default" : "ghost"} 
+                  className="w-full justify-start" 
+                  onClick={() => handleTabChange("settings")}
+                >
+                  <Settings className="mr-2 h-5 w-5" />
+                  Настройки
                 </Button>
                 <Separator />
                 <Button 
@@ -393,7 +386,7 @@ const AdminPanel = () => {
         </div>
         
         <div className="md:w-3/4">
-          <Tabs defaultValue="bookings" className="w-full">
+          <Tabs value={activeTab} onValueChange={handleTabChange}>
             <TabsList className="mb-8">
               <TabsTrigger value="bookings">Бронирования</TabsTrigger>
               <TabsTrigger value="tables">Столики</TabsTrigger>
@@ -797,7 +790,6 @@ const AdminPanel = () => {
         </div>
       </div>
       
-      {/* Edit Booking Dialog */}
       <Dialog open={editBookingDialog.open} onOpenChange={(open) => setEditBookingDialog({ ...editBookingDialog, open })}>
         <DialogContent>
           <DialogHeader>
@@ -835,7 +827,6 @@ const AdminPanel = () => {
         </DialogContent>
       </Dialog>
       
-      {/* Edit Table Dialog */}
       <Dialog open={editTableDialog.open} onOpenChange={(open) => setEditTableDialog({ ...editTableDialog, open })}>
         <DialogContent>
           <DialogHeader>
@@ -873,7 +864,6 @@ const AdminPanel = () => {
         </DialogContent>
       </Dialog>
       
-      {/* Add Table Dialog */}
       <Dialog open={addTableDialog} onOpenChange={setAddTableDialog}>
         <DialogContent>
           <DialogHeader>
@@ -907,7 +897,6 @@ const AdminPanel = () => {
         </DialogContent>
       </Dialog>
       
-      {/* Edit Dish Dialog */}
       <Dialog open={editDishDialog.open} onOpenChange={(open) => setEditDishDialog({ ...editDishDialog, open, categoryId: open ? editDishDialog.categoryId : null, dishId: open ? editDishDialog.dishId : null })}>
         <DialogContent>
           <DialogHeader>
@@ -941,7 +930,6 @@ const AdminPanel = () => {
         </DialogContent>
       </Dialog>
       
-      {/* Add Dish Dialog */}
       <Dialog open={addDishDialog.open} onOpenChange={(open) => setAddDishDialog({ ...addDishDialog, open, categoryId: open ? addDishDialog.categoryId : null })}>
         <DialogContent>
           <DialogHeader>
@@ -990,7 +978,6 @@ const AdminPanel = () => {
         </DialogContent>
       </Dialog>
       
-      {/* Edit Category Dialog */}
       <Dialog open={editCategoryDialog.open} onOpenChange={(open) => setEditCategoryDialog({ ...editCategoryDialog, open, categoryId: open ? editCategoryDialog.categoryId : null })}>
         <DialogContent>
           <DialogHeader>

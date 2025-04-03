@@ -29,19 +29,19 @@ const Header = () => {
         </div>
         
         <div className={`${isMenuOpen ? 'flex' : 'hidden'} md:flex flex-col md:flex-row items-center mt-4 md:mt-0 w-full md:w-auto gap-2`}>
-          <nav className="flex items-center gap-1 md:gap-4">
-            <Link to="/restaurants" className="text-white hover:text-primary hover:underline hover:decoration-primary hover:decoration-2 px-3 py-2 text-xs sm:text-sm transition-colors">
+          <nav className="flex items-center gap-0.5 md:gap-2">
+            <Link to="/restaurants" className="text-white hover:text-primary hover:underline hover:decoration-primary hover:decoration-2 px-2 py-2 text-xs whitespace-nowrap transition-colors">
               Рестораны
             </Link>
-            <Link to="/about" className="whitespace-nowrap text-white hover:text-primary hover:underline hover:decoration-primary hover:decoration-2 px-3 py-2 text-xs sm:text-sm transition-colors">
-              О сервисе
+            <Link to="/about" className="text-white hover:text-primary hover:underline hover:decoration-primary hover:decoration-2 px-2 py-2 text-xs whitespace-nowrap transition-colors">
+              О&nbsp;сервисе
             </Link>
-            <Button variant="outline" size="sm" asChild className="text-xs">
+            <Button variant="outline" size="sm" asChild className="text-xs px-2">
               <Link to="/login" className="flex items-center gap-1">
                 <span>Войти</span>
               </Link>
             </Button>
-            <Button variant="default" size="sm" asChild className="text-xs">
+            <Button variant="default" size="sm" asChild className="text-xs px-2">
               <Link to="/signup" className="flex items-center gap-1">
                 <span>Регистрация</span>
               </Link>

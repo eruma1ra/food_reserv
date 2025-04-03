@@ -100,7 +100,7 @@
   
   /* Mobile responsive navigation */
   .mobile-nav-item {
-    @apply w-full py-2 px-3 text-xs sm:text-sm;
+    @apply w-full py-2 px-3 text-[10px] sm:text-xs;
   }
   
   /* Improve mobile menu appearance */
@@ -110,7 +110,7 @@
   
   /* Ensure search elements are responsive */
   .search-input {
-    @apply w-full max-w-full text-xs sm:text-sm;
+    @apply w-full max-w-full text-[10px] sm:text-xs;
   }
   
   /* Fix badge text overflow */
@@ -120,6 +120,6 @@
   
   /* Fix mobile cuisine buttons */
   .cuisine-button {
-    @apply whitespace-nowrap text-xs px-2 sm:px-4 text-center overflow-hidden;
+    @apply whitespace-nowrap text-[10px] px-1 sm:px-3 text-center overflow-hidden truncate;
   }
 }
