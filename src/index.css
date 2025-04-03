@@ -123,10 +123,11 @@
     @apply whitespace-nowrap text-[10px] px-1 sm:px-3 text-center overflow-hidden truncate;
   }
 
-  /* Remove red focus outline on search input */
+  /* Remove any outline on search input focus */
   input[type="text"]:focus, 
   input[type="search"]:focus,
-  .search-input:focus {
-    @apply outline-none ring-0 border-input;
+  .search-input:focus,
+  .no-outline:focus {
+    @apply outline-none ring-0 border-input shadow-none;
   }
 }
