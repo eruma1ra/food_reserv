@@ -29,11 +29,11 @@ const Header = () => {
         </div>
         
         <div className={`${isMenuOpen ? 'flex' : 'hidden'} md:flex flex-col md:flex-row items-center mt-4 md:mt-0 w-full md:w-auto gap-2`}>
-          <nav className="flex items-center gap-0.5 md:gap-2">
-            <Link to="/restaurants" className="text-white hover:text-primary hover:underline hover:decoration-primary hover:decoration-2 px-2 py-2 text-xs whitespace-nowrap transition-colors">
+          <nav className="flex items-center gap-0.5 md:gap-1">
+            <Link to="/restaurants" className="text-white hover:text-primary hover:underline hover:decoration-primary hover:decoration-2 px-2 py-2 text-xs md:text-sm whitespace-nowrap transition-colors">
               Рестораны
             </Link>
-            <Link to="/about" className="text-white hover:text-primary hover:underline hover:decoration-primary hover:decoration-2 px-2 py-2 text-xs whitespace-nowrap transition-colors">
+            <Link to="/about" className="text-white hover:text-primary hover:underline hover:decoration-primary hover:decoration-2 px-2 py-2 text-xs md:text-sm whitespace-nowrap transition-colors">
               О&nbsp;сервисе
             </Link>
             <Button variant="outline" size="sm" asChild className="text-xs px-2">

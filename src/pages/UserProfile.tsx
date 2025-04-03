@@ -14,6 +14,8 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 const UserProfile = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("bookings");
+  
   const [userInfo, setUserInfo] = useState({
     firstName: 'Иван',
     lastName: 'Петров',
@@ -110,6 +112,15 @@ const UserProfile = () => {
     navigate('/');
   };
 
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+  };
+
+  // Handle sidebar navigation button clicks
+  const handleSidebarClick = (tabValue: string) => {
+    setActiveTab(tabValue);
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col md:flex-row gap-8">
@@ -124,23 +135,29 @@ const UserProfile = () => {
             </CardHeader>
             <CardContent>
               <nav className="space-y-2">
-                <Button variant="ghost" className="w-full justify-start" asChild>
-                  <a href="#bookings" className="flex items-center">
-                    <BookOpen className="mr-2 h-5 w-5" />
-                    Мои бронирования
-                  </a>
+                <Button 
+                  variant={activeTab === "bookings" ? "secondary" : "ghost"} 
+                  className="w-full justify-start" 
+                  onClick={() => handleSidebarClick("bookings")}
+                >
+                  <BookOpen className="mr-2 h-5 w-5" />
+                  Мои бронирования
                 </Button>
-                <Button variant="ghost" className="w-full justify-start" asChild>
-                  <a href="#profile" className="flex items-center">
-                    <User className="mr-2 h-5 w-5" />
-                    Профиль
-                  </a>
+                <Button 
+                  variant={activeTab === "profile" ? "secondary" : "ghost"} 
+                  className="w-full justify-start"
+                  onClick={() => handleSidebarClick("profile")}
+                >
+                  <User className="mr-2 h-5 w-5" />
+                  Профиль
                 </Button>
-                <Button variant="ghost" className="w-full justify-start" asChild>
-                  <a href="#settings" className="flex items-center">
-                    <Settings className="mr-2 h-5 w-5" />
-                    Настройки
-                  </a>
+                <Button 
+                  variant={activeTab === "settings" ? "secondary" : "ghost"} 
+                  className="w-full justify-start"
+                  onClick={() => handleSidebarClick("settings")}
+                >
+                  <Settings className="mr-2 h-5 w-5" />
+                  Настройки
                 </Button>
                 <Separator />
                 <Button 
@@ -157,7 +174,7 @@ const UserProfile = () => {
         </div>
         
         <div className="md:w-3/4">
-          <Tabs defaultValue="bookings" className="w-full">
+          <Tabs value={activeTab} onValueChange={handleTabChange}>
             <TabsList className="mb-8">
               <TabsTrigger value="bookings">Мои бронирования</TabsTrigger>
               <TabsTrigger value="profile">Профиль</TabsTrigger>

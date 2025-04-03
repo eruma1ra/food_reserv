@@ -85,19 +85,23 @@ const Home = () => {
           </p>
 
           <div className="max-w-md mx-auto">
-            <form onSubmit={handleSearch} className="relative flex w-full">
-              <div className="relative flex-grow w-full">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-                <Input 
-                  type="text" 
-                  name="homeSearch"
-                  placeholder="Поиск ресторана" 
-                  className="pl-9 pr-4 h-10 md:h-12 rounded-r-none bg-background/80 backdrop-blur-sm text-xs sm:text-sm w-full" 
-                />
-                <Button 
-                  type="submit" 
-                  className="absolute right-0 top-0 h-full rounded-l-none px-4 md:px-6 text-xs sm:text-sm"
-                >Найти</Button>
+            <form onSubmit={handleSearch} className="relative">
+              <div className="relative flex w-full">
+                <div className="relative w-full">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                  <Input 
+                    type="text" 
+                    name="homeSearch"
+                    placeholder="Поиск ресторана" 
+                    className="pl-9 pr-20 h-10 md:h-12 bg-background/80 backdrop-blur-sm text-xs sm:text-sm w-full" 
+                  />
+                  <Button 
+                    type="submit" 
+                    className="absolute right-0 top-0 h-full rounded-l-none px-4 md:px-6 text-xs sm:text-sm"
+                  >
+                    Найти
+                  </Button>
+                </div>
               </div>
             </form>
           </div>
