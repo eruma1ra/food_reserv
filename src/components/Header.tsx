@@ -16,6 +16,7 @@ const Header = () => {
   };
 
   const navItems = [
+    { path: '/', label: 'Главная' },
     { path: '/restaurants', label: 'Рестораны' },
     { path: '/about', label: 'О\u00A0сервисе' },
     { path: '/faq', label: 'Вопросы' },
