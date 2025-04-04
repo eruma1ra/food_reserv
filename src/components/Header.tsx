@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Menu, MessageCircle, Calendar } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -17,9 +17,9 @@ const Header = () => {
 
   const navItems = [
     { path: '/restaurants', label: 'Рестораны' },
-    { path: '/bookings', label: 'Мои бронирования', icon: Calendar },
-    { path: '/faq', label: 'Вопросы', icon: MessageCircle },
     { path: '/about', label: 'О\u00A0сервисе' },
+    { path: '/faq', label: 'Вопросы' },
+    { path: '/partner', label: 'Сотрудничество' },
   ];
 
   return (
@@ -51,7 +51,6 @@ const Header = () => {
                 className={`flex items-center gap-1 text-white hover:text-primary hover:underline hover:decoration-primary hover:decoration-2 px-2 py-2 text-xs md:text-base whitespace-nowrap transition-colors w-full md:w-auto text-center ${isActive(item.path) ? 'text-primary underline decoration-primary decoration-2' : ''}`}
                 onClick={() => isMobile && setIsMenuOpen(false)}
               >
-                {item.icon && <item.icon className="h-4 w-4 hidden sm:inline-block" />}
                 <span>{item.label}</span>
               </Link>
             ))}
