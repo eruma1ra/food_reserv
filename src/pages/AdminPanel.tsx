@@ -13,7 +13,6 @@ import {
   Check,
   X, 
   BarChart3, 
-  Settings,
   LogOut, 
   Edit, 
   ImagePlus,
@@ -362,14 +361,6 @@ const AdminPanel = () => {
                 >
                   <BarChart3 className="mr-2 h-5 w-5" />
                   Аналитика
-                </Button>
-                <Button 
-                  variant={activeTab === "settings" ? "default" : "ghost"} 
-                  className="w-full justify-start" 
-                  onClick={() => handleTabChange("settings")}
-                >
-                  <Settings className="mr-2 h-5 w-5" />
-                  Настройки
                 </Button>
                 <Separator />
                 <Button 
