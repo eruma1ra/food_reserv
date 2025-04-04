@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -332,32 +333,36 @@ const AdminPanel = () => {
               <nav className="space-y-2">
                 <Button 
                   variant={activeTab === "bookings" ? "default" : "ghost"} 
-                  className="w-full justify-start" 
+                  className="w-full justify-start admin-nav-button" 
                   onClick={() => handleTabChange("bookings")}
+                  data-state={activeTab === "bookings" ? "active" : "inactive"}
                 >
                   <BookOpen className="mr-2 h-5 w-5" />
                   Бронирования
                 </Button>
                 <Button 
                   variant={activeTab === "tables" ? "default" : "ghost"} 
-                  className="w-full justify-start" 
+                  className="w-full justify-start admin-nav-button" 
                   onClick={() => handleTabChange("tables")}
+                  data-state={activeTab === "tables" ? "active" : "inactive"}
                 >
                   <Utensils className="mr-2 h-5 w-5" />
                   Столики
                 </Button>
                 <Button 
                   variant={activeTab === "profile" ? "default" : "ghost"} 
-                  className="w-full justify-start" 
+                  className="w-full justify-start admin-nav-button" 
                   onClick={() => handleTabChange("profile")}
+                  data-state={activeTab === "profile" ? "active" : "inactive"}
                 >
                   <User className="mr-2 h-5 w-5" />
                   Профиль ресторана
                 </Button>
                 <Button 
                   variant={activeTab === "analytics" ? "default" : "ghost"} 
-                  className="w-full justify-start" 
+                  className="w-full justify-start admin-nav-button" 
                   onClick={() => handleTabChange("analytics")}
+                  data-state={activeTab === "analytics" ? "active" : "inactive"}
                 >
                   <BarChart3 className="mr-2 h-5 w-5" />
                   Аналитика

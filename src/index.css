@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;500;600&display=swap');
 
 @tailwind base;
@@ -134,5 +135,17 @@
   [tabindex]:focus,
   [tabindex]:focus-visible {
     @apply outline-none ring-0 shadow-none;
+  }
+  
+  .admin-nav-button {
+    @apply transition-colors;
+  }
+  
+  .admin-nav-button[data-state="active"] {
+    @apply bg-muted text-white hover:bg-muted;
+  }
+  
+  .admin-nav-button[data-state="inactive"] {
+    @apply hover:bg-primary/80 hover:text-white;
   }
 }
