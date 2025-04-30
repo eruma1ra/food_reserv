@@ -23,14 +23,13 @@ const db = new sqlite3.Database("./database.db", (err) => {
       )
     `);
 
-    // Создание таблицы для партнеров
     db.run(`
-      CREATE TABLE IF NOT EXISTS partners (
+      CREATE TABLE IF NOT EXISTS restaurants (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         restaurantName TEXT,
         contactName TEXT,
         position TEXT,
-        email TEXT,
+        email TEXT UNIQUE,
         phone TEXT,
         address TEXT,
         message TEXT
@@ -92,6 +91,60 @@ app.post("/api/signup", (req, res) => {
       .status(201)
       .json({ message: "Регистрация успешна", userId: this.lastID });
   });
+});
+
+// Регистрация ресторана
+app.post("/api/restaurant-signup", (req, res) => {
+  const {
+    restaurantName,
+    contactName,
+    position,
+    email,
+    phone,
+    address,
+    message,
+  } = req.body;
+
+  if (
+    !restaurantName ||
+    !contactName ||
+    !position ||
+    !email ||
+    !phone ||
+    !address ||
+    !message
+  ) {
+    return res.status(400).json({ message: "Все поля обязательны" });
+  }
+
+  if (!validateEmail(email)) {
+    return res.status(400).json({ message: "Некорректный формат email" });
+  }
+
+  if (!validatePhone(phone)) {
+    return res.status(400).json({ message: "Некорректный формат телефона" });
+  }
+
+  const query = `INSERT INTO restaurants (restaurantName, contactName, position, email, phone, address, message) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+
+  db.run(
+    query,
+    [restaurantName, contactName, position, email, phone, address, message],
+    function (err) {
+      if (err) {
+        if (err.message.includes("UNIQUE constraint failed")) {
+          return res.status(400).json({ message: "Email уже используется" });
+        }
+        return res
+          .status(500)
+          .json({ message: "Ошибка сервера", error: err.message });
+      }
+      res.status(201).json({
+        message: "Регистрация ресторана успешна",
+        restaurantId: this.lastID,
+      });
+    }
+  );
 });
 
 // Вход пользователя
@@ -212,56 +265,6 @@ app.delete("/api/delete-account", (req, res) => {
     }
     res.status(200).json({ message: "Аккаунт удален" });
   });
-});
-
-// Обработка заявки на партнерство
-app.post("/api/partner", (req, res) => {
-  const {
-    restaurantName,
-    contactName,
-    position,
-    email,
-    phone,
-    address,
-    message,
-  } = req.body;
-
-  if (
-    !restaurantName ||
-    !contactName ||
-    !position ||
-    !email ||
-    !phone ||
-    !address ||
-    !message
-  ) {
-    return res.status(400).json({ message: "Все поля обязательны" });
-  }
-
-  if (!validateEmail(email)) {
-    return res.status(400).json({ message: "Некорректный формат email" });
-  }
-
-  if (!validatePhone(phone)) {
-    return res.status(400).json({ message: "Некорректный формат телефона" });
-  }
-
-  const query = `INSERT INTO partners (restaurantName, contactName, position, email, phone, address, message) VALUES (?, ?, ?, ?, ?, ?, ?)`;
-
-  db.run(
-    query,
-    [restaurantName, contactName, position, email, phone, address, message],
-    function (err) {
-      if (err) {
-        return res
-          .status(500)
-          .json({ message: "Ошибка сервера", error: err.message });
-      }
-      res
-        .status(201)
-        .json({ message: "Заявка успешно отправлена", partnerId: this.lastID });
-    }
-  );
 });
 
 const PORT = 8080;

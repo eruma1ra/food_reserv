@@ -22,9 +22,15 @@ const SignUp = () => {
     phone: "",
     password: "",
     confirmPassword: "",
+    restaurantName: "",
+    contactName: "",
+    position: "",
+    address: "",
+    message: "",
   });
 
   const [errorMessage, setErrorMessage] = useState("");
+  const [activeTab, setActiveTab] = useState("user");
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -46,7 +52,10 @@ const SignUp = () => {
       return false;
     }
 
-    if (formData.password !== formData.confirmPassword) {
+    if (
+      activeTab === "user" &&
+      formData.password !== formData.confirmPassword
+    ) {
       setErrorMessage("Пароли не совпадают");
       return false;
     }
@@ -60,8 +69,11 @@ const SignUp = () => {
       return;
     }
 
+    const endpoint =
+      activeTab === "user" ? "/api/signup" : "/api/restaurant-signup";
+
     try {
-      const response = await fetch("http://localhost:8080/api/signup", {
+      const response = await fetch(`http://localhost:8080${endpoint}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -98,7 +110,10 @@ const SignUp = () => {
         </CardHeader>
 
         <CardContent>
-          <Tabs defaultValue="user">
+          <Tabs
+            value={activeTab}
+            onValueChange={(value) => setActiveTab(value)}
+          >
             <TabsList className="grid w-full grid-cols-2 mb-4">
               <TabsTrigger value="user">Пользователь</TabsTrigger>
               <TabsTrigger value="restaurant">Ресторан</TabsTrigger>
@@ -170,6 +185,86 @@ const SignUp = () => {
                   placeholder="••••••••"
                   type="password"
                   value={formData.confirmPassword}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </TabsContent>
+
+            <TabsContent value="restaurant" className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="restaurantName">Название ресторана</Label>
+                <Input
+                  id="restaurantName"
+                  placeholder="Введите название ресторана"
+                  value={formData.restaurantName}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="contactName">Контактное лицо</Label>
+                <Input
+                  id="contactName"
+                  placeholder="Иван Петров"
+                  value={formData.contactName}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="position">Должность</Label>
+                <Input
+                  id="position"
+                  placeholder="Менеджер"
+                  value={formData.position}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  placeholder="name@example.com"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="phone">Телефон</Label>
+                <Input
+                  id="phone"
+                  placeholder="+7 (___) ___-__-__"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="address">Адрес</Label>
+                <Input
+                  id="address"
+                  placeholder="Введите адрес ресторана"
+                  value={formData.address}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="message">Сообщение</Label>
+                <Input
+                  id="message"
+                  placeholder="Введите сообщение"
+                  value={formData.message}
                   onChange={handleChange}
                   required
                 />
