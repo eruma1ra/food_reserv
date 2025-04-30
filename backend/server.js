@@ -22,6 +22,20 @@ const db = new sqlite3.Database("./database.db", (err) => {
         password TEXT
       )
     `);
+
+    // Создание таблицы для партнеров
+    db.run(`
+      CREATE TABLE IF NOT EXISTS partners (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        restaurantName TEXT,
+        contactName TEXT,
+        position TEXT,
+        email TEXT,
+        phone TEXT,
+        address TEXT,
+        message TEXT
+      )
+    `);
   }
 });
 
@@ -35,6 +49,7 @@ const validatePhone = (phone) => {
   return phonePattern.test(phone);
 };
 
+// Регистрация пользователя
 app.post("/api/signup", (req, res) => {
   const { firstName, lastName, email, phone, password, confirmPassword } =
     req.body;
@@ -79,6 +94,7 @@ app.post("/api/signup", (req, res) => {
   });
 });
 
+// Вход пользователя
 app.post("/api/login", (req, res) => {
   const { email, password } = req.body;
 
@@ -107,6 +123,7 @@ app.post("/api/login", (req, res) => {
   });
 });
 
+// Получение профиля пользователя
 app.get("/api/profile", (req, res) => {
   const email = req.query.email;
 
@@ -130,6 +147,7 @@ app.get("/api/profile", (req, res) => {
   });
 });
 
+// Обновление профиля пользователя
 app.put("/api/profile", (req, res) => {
   const { firstName, lastName, email, phone } = req.body;
 
@@ -153,6 +171,7 @@ app.put("/api/profile", (req, res) => {
   });
 });
 
+// Смена пароля пользователя
 app.post("/api/change-password", (req, res) => {
   const { email, currentPassword, newPassword } = req.body;
 
@@ -180,6 +199,7 @@ app.post("/api/change-password", (req, res) => {
   });
 });
 
+// Удаление аккаунта пользователя
 app.delete("/api/delete-account", (req, res) => {
   const { email } = req.body;
 
@@ -192,6 +212,56 @@ app.delete("/api/delete-account", (req, res) => {
     }
     res.status(200).json({ message: "Аккаунт удален" });
   });
+});
+
+// Обработка заявки на партнерство
+app.post("/api/partner", (req, res) => {
+  const {
+    restaurantName,
+    contactName,
+    position,
+    email,
+    phone,
+    address,
+    message,
+  } = req.body;
+
+  if (
+    !restaurantName ||
+    !contactName ||
+    !position ||
+    !email ||
+    !phone ||
+    !address ||
+    !message
+  ) {
+    return res.status(400).json({ message: "Все поля обязательны" });
+  }
+
+  if (!validateEmail(email)) {
+    return res.status(400).json({ message: "Некорректный формат email" });
+  }
+
+  if (!validatePhone(phone)) {
+    return res.status(400).json({ message: "Некорректный формат телефона" });
+  }
+
+  const query = `INSERT INTO partners (restaurantName, contactName, position, email, phone, address, message) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+
+  db.run(
+    query,
+    [restaurantName, contactName, position, email, phone, address, message],
+    function (err) {
+      if (err) {
+        return res
+          .status(500)
+          .json({ message: "Ошибка сервера", error: err.message });
+      }
+      res
+        .status(201)
+        .json({ message: "Заявка успешно отправлена", partnerId: this.lastID });
+    }
+  );
 });
 
 const PORT = 8080;

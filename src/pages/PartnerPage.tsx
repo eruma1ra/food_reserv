@@ -1,34 +1,78 @@
-
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { useToast } from '@/components/ui/use-toast';
-import { Check, Clock, Users, BarChart3, Laptop } from 'lucide-react';
+import React from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/components/ui/use-toast";
+import { Check, Clock, Users, BarChart3 } from "lucide-react";
 
 const PartnerPage = () => {
   const { toast } = useToast();
-  
-  const handleSubmit = (e: React.FormEvent) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    toast({
-      title: "Заявка отправлена",
-      description: "Мы свяжемся с вами в ближайшее время для обсуждения деталей сотрудничества.",
-    });
+
+    const formData = {
+      restaurantName: e.target.elements["restaurant-name"].value,
+      contactName: e.target.elements["contact-name"].value,
+      position: e.target.elements["position"].value,
+      email: e.target.elements["email"].value,
+      phone: e.target.elements["phone"].value,
+      address: e.target.elements["address"].value,
+      message: e.target.elements["message"].value,
+    };
+
+    try {
+      const response = await fetch("http://localhost:8080/api/partner", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Заявка отправлена",
+          description:
+            "Мы свяжемся с вами в ближайшее время для обсуждения деталей сотрудничества.",
+        });
+      } else {
+        const errorData = await response.json();
+        toast({
+          title: "Ошибка",
+          description:
+            errorData.message || "Произошла ошибка при отправке заявки.",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Ошибка",
+        description: "Произошла ошибка при отправке заявки.",
+      });
+    }
   };
 
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-3xl md:text-4xl font-heading font-bold mb-6">Станьте партнером ТолькоРесторан</h1>
+          <h1 className="text-3xl md:text-4xl font-heading font-bold mb-6">
+            Станьте партнером ТолькоРесторан
+          </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Присоединяйтесь к нашей платформе и увеличьте поток ваших гостей уже сегодня
+            Присоединяйтесь к нашей платформе и увеличьте поток ваших гостей уже
+            сегодня
           </p>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
           <Card className="border-border">
             <CardHeader className="text-center pb-2">
@@ -39,7 +83,7 @@ const PartnerPage = () => {
               Управляйте бронированиями онлайн и освободите время для гостей
             </CardContent>
           </Card>
-          
+
           <Card className="border-border">
             <CardHeader className="text-center pb-2">
               <Users className="w-12 h-12 mx-auto text-primary mb-4" />
@@ -49,7 +93,7 @@ const PartnerPage = () => {
               Привлекайте новых гостей и увеличивайте заполняемость ресторана
             </CardContent>
           </Card>
-          
+
           <Card className="border-border">
             <CardHeader className="text-center pb-2">
               <BarChart3 className="w-12 h-12 mx-auto text-primary mb-4" />
@@ -60,9 +104,11 @@ const PartnerPage = () => {
             </CardContent>
           </Card>
         </div>
-        
+
         <div className="bg-muted/30 rounded-lg p-6 mb-12">
-          <h2 className="text-2xl font-heading font-bold mb-6">Преимущества партнерства</h2>
+          <h2 className="text-2xl font-heading font-bold mb-6">
+            Преимущества партнерства
+          </h2>
           <div className="space-y-4">
             <div className="flex items-start">
               <span className="mr-4 mt-1 bg-primary/10 p-1 rounded-full">
@@ -71,11 +117,12 @@ const PartnerPage = () => {
               <div>
                 <h3 className="font-medium mb-1">Удобная панель управления</h3>
                 <p className="text-muted-foreground">
-                  Простой и интуитивно понятный интерфейс для управления бронированиями, меню и отзывами
+                  Простой и интуитивно понятный интерфейс для управления
+                  бронированиями, меню и отзывами
                 </p>
               </div>
             </div>
-            
+
             <div className="flex items-start">
               <span className="mr-4 mt-1 bg-primary/10 p-1 rounded-full">
                 <Check className="h-5 w-5 text-primary" />
@@ -83,11 +130,12 @@ const PartnerPage = () => {
               <div>
                 <h3 className="font-medium mb-1">Маркетинг и продвижение</h3>
                 <p className="text-muted-foreground">
-                  Мы продвигаем ваш ресторан среди нашей активной аудитории потенциальных гостей
+                  Мы продвигаем ваш ресторан среди нашей активной аудитории
+                  потенциальных гостей
                 </p>
               </div>
             </div>
-            
+
             <div className="flex items-start">
               <span className="mr-4 mt-1 bg-primary/10 p-1 rounded-full">
                 <Check className="h-5 w-5 text-primary" />
@@ -95,11 +143,12 @@ const PartnerPage = () => {
               <div>
                 <h3 className="font-medium mb-1">Отчеты и анализ</h3>
                 <p className="text-muted-foreground">
-                  Получайте еженедельные отчеты о бронированиях, загруженности и предпочтениях гостей
+                  Получайте еженедельные отчеты о бронированиях, загруженности и
+                  предпочтениях гостей
                 </p>
               </div>
             </div>
-            
+
             <div className="flex items-start">
               <span className="mr-4 mt-1 bg-primary/10 p-1 rounded-full">
                 <Check className="h-5 w-5 text-primary" />
@@ -107,13 +156,14 @@ const PartnerPage = () => {
               <div>
                 <h3 className="font-medium mb-1">Техническая поддержка</h3>
                 <p className="text-muted-foreground">
-                  Наша команда поддержки доступна 24/7 для решения любых вопросов
+                  Наша команда поддержки доступна 24/7 для решения любых
+                  вопросов
                 </p>
               </div>
             </div>
           </div>
         </div>
-        
+
         <Card className="border-border">
           <CardHeader>
             <CardTitle>Заполните форму для партнерства</CardTitle>
@@ -125,9 +175,12 @@ const PartnerPage = () => {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="restaurant-name">Название ресторана</Label>
-                <Input id="restaurant-name" placeholder="Введите название вашего ресторана" />
+                <Input
+                  id="restaurant-name"
+                  placeholder="Введите название вашего ресторана"
+                />
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="contact-name">Контактное лицо</Label>
@@ -138,33 +191,39 @@ const PartnerPage = () => {
                   <Input id="position" placeholder="Ваша должность" />
                 </div>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
-                  <Input id="email" type="email" placeholder="email@example.com" />
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="email@example.com"
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="phone">Телефон</Label>
                   <Input id="phone" placeholder="+7 (___) ___-__-__" />
                 </div>
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="address">Адрес ресторана</Label>
                 <Input id="address" placeholder="Город, улица, дом" />
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="message">Дополнительная информация</Label>
-                <Textarea 
-                  id="message" 
+                <Textarea
+                  id="message"
                   placeholder="Расскажите кратко о вашем ресторане и почему вы хотите стать партнером"
                   rows={4}
                 />
               </div>
-              
-              <Button type="submit" className="w-full">Отправить заявку</Button>
+
+              <Button type="submit" className="w-full">
+                Отправить заявку
+              </Button>
             </form>
           </CardContent>
         </Card>
