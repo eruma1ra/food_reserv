@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Card,
@@ -38,15 +38,47 @@ const UserProfile = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("bookings");
-
   const [userInfo, setUserInfo] = useState({
-    firstName: "Иван",
-    lastName: "Петров",
-    email: "ivan@example.com",
-    phone: "+7 (901) 123-45-67",
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
   });
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+  useEffect(() => {
+    // Загрузка данных пользователя из базы данных
+    const fetchUserData = async () => {
+      try {
+        const email = localStorage.getItem("loggedInEmail");
+        const response = await fetch(
+          `http://localhost:8080/api/profile?email=${email}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Ошибка загрузки данных профиля");
+        }
+
+        const data = await response.json();
+        setUserInfo(data);
+      } catch (error) {
+        console.error("Ошибка:", error);
+        toast({
+          title: "Ошибка",
+          description: "Не удалось загрузить данные профиля",
+        });
+      }
+    };
+
+    fetchUserData();
+  }, [toast]);
 
   const [userBookings, setUserBookings] = useState([
     {
@@ -55,7 +87,7 @@ const UserProfile = () => {
       date: "25 сентября 2023",
       time: "19:00",
       guests: 2,
-      status: "confirmed", // confirmed, completed, cancelled
+      status: "confirmed",
       image:
         "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
     },
@@ -108,33 +140,109 @@ const UserProfile = () => {
     });
   };
 
-  const handleProfileSubmit = (e: React.FormEvent) => {
+  const handleProfileSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "Профиль обновлен",
-      description: "Ваши данные были успешно сохранены.",
-    });
+    try {
+      const response = await fetch("http://localhost:8080/api/profile", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userInfo),
+      });
+
+      if (!response.ok) {
+        throw new Error("Ошибка обновления профиля");
+      }
+
+      toast({
+        title: "Профиль обновлен",
+        description: "Ваши данные были успешно сохранены.",
+      });
+    } catch (error) {
+      console.error("Ошибка:", error);
+      toast({
+        title: "Ошибка",
+        description: "Не удалось обновить данные профиля",
+      });
+    }
   };
 
-  const handlePasswordChange = (e: React.FormEvent) => {
+  const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "Пароль изменен",
-      description: "Ваш пароль был успешно изменен.",
-    });
+    const currentPassword = (
+      document.getElementById("currentPassword") as HTMLInputElement
+    ).value;
+    const newPassword = (
+      document.getElementById("newPassword") as HTMLInputElement
+    ).value;
+
+    try {
+      const response = await fetch(
+        "http://localhost:8080/api/change-password",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: userInfo.email,
+            currentPassword,
+            newPassword,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Ошибка изменения пароля");
+      }
+
+      toast({
+        title: "Пароль изменен",
+        description: "Ваш пароль был успешно изменен.",
+      });
+    } catch (error) {
+      console.error("Ошибка:", error);
+      toast({
+        title: "Ошибка",
+        description: "Не удалось изменить пароль",
+      });
+    }
   };
 
-  const handleDeleteAccount = () => {
+  const handleDeleteAccount = async () => {
     setIsDeleteDialogOpen(false);
-    toast({
-      title: "Аккаунт удален",
-      description:
-        "Ваш аккаунт был успешно удален. Перенаправление на главную...",
-    });
-    setTimeout(() => navigate("/"), 2000);
+    try {
+      const response = await fetch("http://localhost:8080/api/delete-account", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: userInfo.email }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Ошибка удаления аккаунта");
+      }
+
+      toast({
+        title: "Аккаунт удален",
+        description:
+          "Ваш аккаунт был успешно удален. Перенаправление на главную...",
+      });
+      localStorage.setItem("isLoggedIn", "false");
+      setTimeout(() => navigate("/"), 2000);
+    } catch (error) {
+      console.error("Ошибка:", error);
+      toast({
+        title: "Ошибка",
+        description: "Не удалось удалить аккаунт",
+      });
+    }
   };
 
   const handleLogout = () => {
+    localStorage.setItem("isLoggedIn", "false");
     toast({
       title: "Выход из системы",
       description: "Вы успешно вышли из системы.",
@@ -146,7 +254,6 @@ const UserProfile = () => {
     setActiveTab(value);
   };
 
-  // Handle sidebar navigation button clicks
   const handleSidebarClick = (tabValue: string) => {
     setActiveTab(tabValue);
   };
