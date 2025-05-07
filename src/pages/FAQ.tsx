@@ -31,6 +31,8 @@ const FAQ = () => {
     }
   ];
 
+  
+  //FAQ
   return (
     <div className="container mx-auto py-12 px-4">
       <div className="max-w-3xl mx-auto">
