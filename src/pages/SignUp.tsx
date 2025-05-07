@@ -96,7 +96,7 @@ const SignUp = () => {
       setErrorMessage(error.message || "Ошибка подключения к серверу");
     }
   };
-
+//создание
   return (
     <div className="min-h-[calc(100vh-10rem)] flex items-center justify-center py-16 px-4">
       <Card className="w-full max-w-md border-border">
